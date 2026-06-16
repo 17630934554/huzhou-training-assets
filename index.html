@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>湖州仓设备组 · 培训资料</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Microsoft YaHei", "微软雅黑", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: linear-gradient(180deg, #f5f7fb 0%, #ffffff 100%);
+    color: #1a202c;
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+  .header {
+    background: linear-gradient(135deg, #0a2a5e 0%, #1e40af 100%);
+    color: #fff;
+    padding: 48px 24px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent 0%, #d4a847 50%, transparent 100%);
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-size: 14px;
+    opacity: 0.85;
+    letter-spacing: 1px;
+  }
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 32px 20px;
+  }
+  .intro {
+    text-align: center;
+    color: #4a5568;
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 32px;
+    padding: 0 12px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(10, 42, 94, 0.06), 0 1px 2px rgba(10, 42, 94, 0.04);
+    padding: 24px 22px;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: all 0.2s ease;
+    border-left: 4px solid #1e40af;
+    position: relative;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(10, 42, 94, 0.12), 0 2px 4px rgba(10, 42, 94, 0.06);
+    border-left-color: #d4a847;
+  }
+  .card .badge {
+    display: inline-block;
+    background: #f0f4ff;
+    color: #1e40af;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+  .card h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #0a2a5e;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .card .meta {
+    color: #718096;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .card .arrow {
+    position: absolute;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #1e40af;
+    font-size: 20px;
+    font-weight: 300;
+  }
+  .footer {
+    text-align: center;
+    color: #a0aec0;
+    font-size: 12px;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid #e2e8f0;
+  }
+  @media (max-width: 480px) {
+    .header { padding: 36px 20px 32px; }
+    .header h1 { font-size: 22px; }
+    .container { padding: 24px 16px; }
+    .card { padding: 20px 18px; }
+    .card h2 { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>设备组 · 培训资料</h1>
+    <div class="subtitle">现场实操 · 扫码即看 · 长期有效</div>
+  </div>
+  <div class="container">
+    <div class="intro">
+      共 5 份设备操作培训资料，每份含<strong style="color:#1e40af;">现场讲解视频</strong> + <strong style="color:#1e40af;">操作步骤截图</strong> + <strong style="color:#1e40af;">故障分析</strong>。<br>
+      点击进入查看，长期可访问。
+    </div>
+    <div class="grid">
+      <a class="card" href="lesson_1.html">
+        <span class="badge">01</span>
+        <h2>自动贴单机：对贴面单报警故障处理</h2>
+        <div class="meta">报警代码识别 · 故障排查 · 7 张操作截图</div>
+        <span class="arrow">›</span>
+      </a>
+      <a class="card" href="lesson_2.html">
+        <span class="badge">02</span>
+        <h2>自动贴单机：频繁断底纸+收纸器不收纸故障处理</h2>
+        <div class="meta">底纸张力调节 · 收纸器维护 · 7 张操作截图</div>
+        <span class="arrow">›</span>
+      </a>
+      <a class="card" href="lesson_3.html">
+        <span class="badge">03</span>
+        <h2>自动贴单机：标签电眼的调试</h2>
+        <div class="meta">电眼灵敏度设置 · 标签识别校准 · 5 张操作截图</div>
+        <span class="arrow">›</span>
+      </a>
+      <a class="card" href="lesson_4.html">
+        <span class="badge">04</span>
+        <h2>自动贴单机：整机开箱调试及操作</h2>
+        <div class="meta">开箱流程 · 整机调试 · 标准操作 · 6 张操作截图</div>
+        <span class="arrow">›</span>
+      </a>
+      <a class="card" href="lesson_5.html">
+        <span class="badge">05</span>
+        <h2>自动分拣机：动态秤校准调试</h2>
+        <div class="meta">动态秤校准 · 称重精度调试 · 6 张操作截图</div>
+        <span class="arrow">›</span>
+      </a>
+    </div>
+    <div class="footer">
+      设备组 · 培训资料库 · 长期托管
+    </div>
+  </div>
+</body>
+</html>
