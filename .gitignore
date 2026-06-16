@@ -1,0 +1,48 @@
+# Git ignore - 培训资料系统 V3
+# 忽略：备份/缓存/部署临时包/QR 卡 PNG（生成物，不入版本）
+
+# === 备份（不上传）===
+_old_qr_backup/
+*.bak
+*.swp
+*.tmp
+*~
+
+# === Python 缓存 ===
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# === 部署临时包（不存历史） ===
+training_hosting.zip
+*.zip
+
+# === QR 卡 PNG（生成物，add_training.py 重新生成） ===
+# 注意：hosting/qr/ 目录整体忽略（QR 卡是 build 产物，不是 source）
+qr/
+# 但 qr/ 里如果有重要参考图可单独加 !qr/ref_xxx.png 例外
+
+# === 系统文件 ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === IDE ===
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# === Git ===
+.git/
+.gitignore
+.gitattributes
+
+# === 私有凭证（如果大刘误提交） ===
+*token*
+*.env
+.env
+*.pem
+*.key
