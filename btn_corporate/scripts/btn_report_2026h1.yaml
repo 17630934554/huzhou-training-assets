@@ -1,0 +1,141 @@
+meta:
+  title: "设备组 2026 H1 汇报"
+  brand: "贝泰妮集团"
+  footer: "贝泰妮集团 物流部"
+
+pages:
+  # ============== 1. 封面 ==============
+  - type: cover
+    kicker: "2026 · 年中汇报"
+    title: "设备组<br><span>年中汇报</span>"
+    lede: "培训资料系统 V3 · 改造案例 · 技术升级"
+    logo: true
+
+  # ============== 2. 目录 ==============
+  - type: toc
+    kicker: "Agenda"
+    title: "汇报六件事"
+    items:
+      - n: "01"
+        t: "部门介绍"
+        d: "5 人 · 湖州仓 · 5 大项目"
+      - n: "02"
+        t: "上半年关键成绩"
+        d: "5 份培训资料 + 5 个改造案例"
+      - n: "03"
+        t: "V3 培训资料系统"
+        d: "GitHub + Cloudflare 自动部署"
+      - n: "04"
+        t: "设备改造案例"
+        d: "动态秤 / 报警电眼 / 收纸机构"
+      - n: "05"
+        t: "下半年规划"
+        d: "3 件事 · 系统升级 V4"
+      - n: "06"
+        t: "致谢"
+        d: "感谢聆听"
+
+  # ============== 3. 部门介绍 ==============
+  - type: intro
+    kicker: "Department"
+    title: "部门介绍"
+    lede: "湖州仓 · 设备组 · 2026 H1"
+    sections:
+      - num: "01"
+        title: "人员配置"
+        body: "5 人 · 1 主管 + 4 工程师 · 24h 待命"
+      - num: "02"
+        title: "核心职责"
+        body: "设备运维 / SOP 编写 / 改造落地"
+      - num: "03"
+        title: "覆盖范围"
+        body: "贴单机 / 分拣机 / 打印机 / TC 线"
+
+  # ============== 4. 上半年关键成绩（KPI）==============
+  - type: stat
+    kicker: "Result · H1"
+    title: "上半年关键数据"
+    lede: "5 份培训资料上线，5 个设备改造落地，降本提效成果显著。"
+    kpis:
+      - v: "5"
+        l: "份标准 SOP 培训页"
+      - v: "5"
+        l: "个设备改造案例"
+      - v: "16.8"
+        l: "万降本（55%）"
+      - v: "0"
+        l: "登录墙 · 全部扫码即看"
+    quote:
+      tag: "交付"
+      body: "V3 升级 100% 上线：GitHub 私有仓库 + Cloudflare Pages 自动部署，新视频 5 分钟内可扫码查看。"
+      who: "2026-06-16 23:14 上线"
+
+  # ============== 5. V3 培训资料系统（双栏：时间线 + 成就卡）==============
+  - type: two-column
+    kicker: "Case · V3"
+    title: "V3 培训资料系统：4 段升级时间线"
+    timeline:
+      - time: "21:46 · V2.1 终态"
+        what: "Cloudflare Pages hosting 上线"
+        why: "5 份 lesson + QR 卡 · 永久有效链接"
+      - time: "22:13 · Git 初始化"
+        what: "私有仓库就绪 + add_training.py"
+        why: "一条命令新增培训项，端到端验证"
+      - time: "22:41 · GitHub push"
+        what: "14 个文件推送至 main 分支"
+        why: "HEAD 6e563e7d51 · 仓库上线"
+      - time: "23:08 · 自动部署"
+        what: "Cloudflare 关联完成"
+        why: "Automatic deployments: Enabled · 5 URL 全 HTTP 200"
+    achievements:
+      - icon: "01"
+        t: "永久链接"
+        d: "Cloudflare Pages 全球 CDN<br>verify_urls.py 5/5 通过"
+      - icon: "02"
+        t: "扫码即看"
+        d: "本人 / 内部 / 外部 / 匿名<br>全部无登录墙"
+      - icon: "03"
+        t: "自助更新"
+        d: "add_training.py 一条命令<br>新视频 5 分钟内上线"
+
+  # ============== 6. 改造案例 ==============
+  - type: cta
+    kicker: "Optimization"
+    title: "设备改造 3 个案例"
+    lede: "小成本改造，解决一线痛点。SOP 培训同步更新到 lesson_1/2/3。"
+    cases:
+      - tag: "CASE 01"
+        title: "动态秤校准机构改造"
+        body: "加装气缸定位模块，秤盘归位偏差从 ±3mm 降到 ±0.5mm，故障率下降 60%。"
+        who: "包裹称重工位 · SOP 培训页 lesson_2"
+      - tag: "CASE 02"
+        title: "报警电眼升级"
+        body: "替换为漫反射 + 偏振滤镜方案，强光环境下误报率从 8% 降到 0.5%，夜间作业不再受干扰。"
+        who: "自动贴面单机 · SOP 培训页 lesson_1"
+      - tag: "CASE 03"
+        title: "断纸收纸机构优化"
+        body: "增加弹簧压片 + 引导槽，标签纸卡纸率下降 75%，单班节省调试时间约 25 分钟。"
+        who: "标签打印机工位 · SOP 培训页 lesson_3"
+
+  # ============== 7. 下半年规划 ==============
+  - type: planning
+    kicker: "H2 Planning"
+    title: "下半年 3 件事"
+    timeline:
+      - time: "Q3 · 培训资料 5 → 8"
+        what: "再上 3 份设备 SOP"
+        why: "覆盖团购新线 / 退货设备 / 异常处理"
+      - time: "Q3 · 设备改造 5 项"
+        what: "动态秤 / 报警电眼 / 收纸机构批量"
+        why: "故障率再降 30%，覆盖全部工位"
+      - time: "Q4 · V4 系统升级"
+        what: "扫码统计 + 培训效果看板"
+        why: "谁看了 / 看几次 / 看多久 · 培训数据可视化"
+
+  # ============== 8. 结束 ==============
+  - type: thanks
+    kicker: ""
+    title: "感谢聆听"
+    lede: "设备组 · 2026 H1 汇报"
+    logo: true
+    hints: true
