@@ -1077,7 +1077,107 @@ body.edit-mode .edit-hint{opacity:1}
 
     // hash deep-link
     function fromHash(){
-      cons
+      const m = /^#\/(\d+)/.exec(location.hash||'');
+      if (m) go(Math.max(0, parseInt(m[1],10)-1));
+    }
+    window.addEventListener('hashchange', fromHash);
+    fromHash();
+    go(idx);
+
+    // ========== 移动端兜底：点击 + 触屏滑动翻页 ==========
+    // 1) 点击屏幕：右半 → 下一张，左半 → 上一张（忽略双击编辑、忽略输入框）
+    document.addEventListener('click', function (e) {
+      // 双击切换编辑模式时不翻页（dblclick 监听会自己处理）
+      // 点 contenteditable 不翻页
+      if (e.target.closest && e.target.closest('[contenteditable="true"]')) return;
+      // 点 a/link 不翻页（让超链接生效）
+      if (e.target.closest && e.target.closest('a, button, [role="button"]')) return;
+      // 点 .progress-bar / .overview / .notes-overlay 不翻页
+      if (e.target.closest && e.target.closest('.progress-bar, .overview, .notes-overlay, .page-nav, .nav-dot, .page-next, .page-prev')) return;
+      const x = e.clientX, w = window.innerWidth;
+      if (x > w * 0.35) go(idx + 1);
+      else go(idx - 1);
+    });
+
+    // 2) 触屏滑动：水平滑动超过 50px 翻页
+    let touchStartX = 0, touchStartY = 0, touchStartT = 0;
+    document.addEventListener('touchstart', function (e) {
+      if (e.touches.length !== 1) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchStartT = Date.now();
+    }, { passive: true });
+    document.addEventListener('touchend', function (e) {
+      if (e.changedTouches.length !== 1) return;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      const dt = Date.now() - touchStartT;
+      // 水平距离 > 50、垂直距离 < 80、时长 < 800ms → 翻页
+      if (Math.abs(dx) > 50 && Math.abs(dy) < 80 && dt < 800) {
+        if (dx < 0) go(idx + 1);   // 左滑 → 下一张
+        else go(idx - 1);           // 右滑 → 上一张
+      }
+    }, { passive: true });
+
+    // 3) 右下"下一页"按钮（移动端兜底，大圆按钮）
+    const navNext = document.createElement('div');
+    navNext.className = 'page-next';
+    navNext.setAttribute('aria-label', '下一页');
+    navNext.innerHTML = '›';
+    navNext.addEventListener('click', function (e) {
+      e.stopPropagation();
+      go(idx + 1);
+    });
+    document.body.appendChild(navNext);
+
+    // 4) 左下"上一页"按钮
+    const navPrev = document.createElement('div');
+    navPrev.className = 'page-prev';
+    navPrev.setAttribute('aria-label', '上一页');
+    navPrev.innerHTML = '‹';
+    navPrev.addEventListener('click', function (e) {
+      e.stopPropagation();
+      go(idx - 1);
+    });
+    document.body.appendChild(navPrev);
+
+    // 5) 顶部进度圆点（移动端兜底 2）
+    const navDots = document.createElement('div');
+    navDots.className = 'page-nav';
+    for (let i = 0; i < total; i++) {
+      const d = document.createElement('span');
+      d.className = 'nav-dot';
+      d.addEventListener('click', (function (n) {
+        return function (e) { e.stopPropagation(); go(n); };
+      })(i));
+      navDots.appendChild(d);
+    }
+    document.body.appendChild(navDots);
+
+    // 6) 同步圆点状态
+    const _origGo = go;
+    // 重新包装 go 以便同步 nav-dots
+    window.__btnDeckGo = function (n) { _origGo(n); syncDots(n); };
+    function syncDots(n) {
+      const dots = navDots.querySelectorAll('.nav-dot');
+      dots.forEach(function (el, i) { el.classList.toggle('active', i === n); });
+    }
+    // 重写所有翻页入口为带 dots 同步的版本
+    document.addEventListener('keydown', function (e) {
+      if (e.metaKey||e.ctrlKey||e.altKey) return;
+      var n = null;
+      switch (e.key) {
+        case 'ArrowRight': case ' ': case 'PageDown': case 'Enter': n = idx+1; e.preventDefault(); break;
+        case 'ArrowLeft': case 'PageUp': case 'Backspace': n = idx-1; e.preventDefault(); break;
+        case 'Home': n = 0; break;
+        case 'End': n = total-1; break;
+      }
+      if (n !== null) { window.__btnDeckGo(n); }
+    }, true);  // capture 阶段优先于上面那个 keydown 监听
+    syncDots(0);
+  });
+})();
+
 </script>
 <script>
 /* ========== 文字可编辑 + localStorage 自动保存 ========== */
