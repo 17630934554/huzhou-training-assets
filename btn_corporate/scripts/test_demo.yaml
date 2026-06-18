@@ -1,0 +1,53 @@
+meta:
+  title: "btn_html_slides 生成器测试 demo"
+  brand: "贝泰妮集团"
+  footer: "贝泰妮集团 物流部"
+
+pages:
+  # 1. 封面
+  - type: cover
+    kicker: "测试 · 4 页 demo"
+    title: "btn_html_slides<br><span>生成器测试</span>"
+    lede: "验证 6 种基础模板 + 编辑功能"
+    logo: true
+
+  # 2. 目录
+  - type: toc
+    kicker: "Test Plan"
+    title: "测试 4 件事"
+    items:
+      - n: "01"
+        t: "封面渲染"
+        d: "品牌蓝渐变 + logo + 大标题"
+      - n: "02"
+        t: "目录列表"
+        d: "大数字 + 标题 + 描述"
+      - n: "03"
+        t: "KPI 数字"
+        d: "4 列错位金色 + 渐变数字"
+      - n: "04"
+        t: "结束页"
+        d: "品牌渐变 + 致谢"
+
+  # 3. KPI
+  - type: stat
+    kicker: "Result"
+    title: "测试用例统计"
+    lede: "6 种页面类型全部覆盖。"
+    kpis:
+      - v: "10"
+        l: "种页面模板"
+      - v: "1"
+        l: "行命令生成"
+      - v: "0"
+        l: "外部依赖"
+      - v: "∞"
+        l: "次编辑保存"
+
+  # 4. 结束
+  - type: thanks
+    kicker: ""
+    title: "测试完成"
+    lede: "btn_html_slides.py v1.0"
+    logo: true
+    hints: true
