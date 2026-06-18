@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="btn-corporate">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>设备设施培训系统手册 · 培训资料系统 V3</title>
+<link rel="stylesheet" href="../../skills/html-ppt/assets/fonts.css">
+<link rel="stylesheet" href="../../skills/html-ppt/assets/base.css">
+<link rel="stylesheet" href="assets/btn-corporate.css">
+<link rel="stylesheet" href="../../skills/html-ppt/assets/animations/animations.css">
+<style>
+.slide{position:relative}
+.slide.brand-bg{background:linear-gradient(135deg,#0a2540 0%,#1d4ed8 100%);color:#fff}
+.slide.brand-bg .kicker{color:rgba(255,255,255,.85)}
+.slide.brand-bg h1,.slide.brand-bg h2,.slide.brand-bg h3{color:#fff}
+.slide.brand-bg .lede{color:rgba(255,255,255,.85)}
+.slide.brand-bg .deck-footer{border-top-color:rgba(255,255,255,.18);color:rgba(255,255,255,.7)}
+.slide.brand-bg .deck-footer .brand{color:#fff}
+.slide.brand-bg .btn-logo .label .name{color:#fff}
+.slide.brand-bg .btn-logo .label .sub{color:rgba(255,255,255,.6)}
+
+.toc-list{list-style:none;padding:0;margin:32px 0;max-width:820px}
+.toc-list li{display:flex;align-items:baseline;gap:20px;padding:14px 0;border-bottom:1px solid var(--border);font-size:18px;font-weight:500;color:var(--accent)}
+.toc-list li .n{font-size:28px;font-weight:800;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;min-width:48px}
+.toc-list li .t{flex:1}
+.toc-list li .pg{font-size:13px;color:var(--text-3);font-weight:400;min-width:60px;text-align:right}
+
+.flow-row{display:flex;align-items:center;gap:14px;margin:18px 0;font-size:15px;color:var(--text-1)}
+.flow-row .step{background:var(--surface);border:2px solid var(--accent);border-radius:12px;padding:12px 18px;font-weight:600;color:var(--accent);min-width:120px;text-align:center}
+.flow-row .arrow{color:var(--accent-2);font-size:22px;font-weight:800}
+
+.code-block{background:#0a2540;color:#e6edf3;padding:18px 22px;border-radius:12px;font-family:var(--font-mono);font-size:13px;line-height:1.7;margin:14px 0;overflow-x:auto;white-space:pre}
+.code-block .c{color:#7d8590;font-style:italic}
+.code-block .k{color:#ff7b72}
+.code-block .s{color:#a5d6ff}
+.code-block .v{color:#d2a8ff}
+
+.lesson-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin:24px 0}
+.lesson-grid .l{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 16px;position:relative;transition:transform .25s var(--ease),box-shadow .25s var(--ease);cursor:pointer}
+.lesson-grid .l:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.lesson-grid .l::after{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--grad);border-radius:14px 0 0 14px}
+.lesson-grid .l .id{font-size:32px;font-weight:800;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;line-height:1;margin-bottom:8px}
+.lesson-grid .l .name{font-size:13px;font-weight:600;color:var(--accent);line-height:1.4;min-height:54px;margin-bottom:8px}
+.lesson-grid .l .link{font-size:11px;color:var(--text-3);font-family:var(--font-mono)}
+.lesson-grid .l .url{font-size:10px;color:var(--accent-2);text-decoration:none;word-break:break-all;display:block;margin-top:4px}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin:24px 0}
+.two-col .col h4{color:var(--accent);font-size:18px;margin-bottom:10px}
+.two-col .col p{font-size:14px;color:var(--text-2);line-height:1.65}
+.two-col .col ul{padding-left:20px;font-size:14px;color:var(--text-2)}
+.two-col .col ul li{margin-bottom:6px;line-height:1.55}
+
+.callout{background:var(--grad-soft);border-left:4px solid var(--accent-2);border-radius:0 var(--radius) var(--radius) 0;padding:16px 22px;margin:16px 0}
+.callout .label{display:inline-block;font-size:11px;font-weight:700;background:var(--accent-2);color:#fff;padding:3px 10px;border-radius:4px;letter-spacing:.1em;margin-bottom:8px}
+.callout .body{font-size:14px;color:var(--accent);line-height:1.6}
+.callout.warn{border-left-color:var(--warn);background:#fff7ed}
+.callout.warn .label{background:var(--warn)}
+.callout.warn .body{color:#7c2d12}
+.callout.ok{border-left-color:var(--good);background:#ecfdf5}
+.callout.ok .label{background:var(--good)}
+.callout.ok .body{color:#065f46}
+
+table.tbl{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}
+table.tbl th{background:var(--accent);color:#fff;padding:10px 14px;text-align:left;font-weight:600;font-size:13px}
+table.tbl td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-1)}
+table.tbl tr:nth-child(even) td{background:var(--bg-soft)}
+table.tbl td.url{font-family:var(--font-mono);font-size:12px;color:var(--accent-2);word-break:break-all}
+table.tbl td .tag{display:inline-block;background:var(--btn-gold);color:#fff;font-size:10px;padding:2px 8px;border-radius:4px;margin-left:6px;font-weight:600;letter-spacing:.04em}
+</style>
+</head>
+<body data-themes="btn-corporate" data-theme-base="">
+<div class="deck">
+
+  <!-- 1. 封面 -->
+  <section class="slide brand-bg is-active" data-title="封面">
+    <div class="hero-deco"></div>
+    <div class="btn-logo" style="margin-bottom:48px">
+      <span class="mark">BTN</span>
+      <span class="label">
+        <span class="name">贝泰妮集团</span>
+        <span class="sub">BOTANEE GROUP</span>
+      </span>
+    </div>
+    <p class="kicker">V3.0 · 2026-06-18</p>
+    <h1 class="h1 anim-fade-up" data-anim="fade-up" style="font-size:96px;line-height:1.05;margin:24px 0 16px">
+      设备设施<br>培训系统手册
+    </h1>
+    <p class="lede" style="font-size:22px;margin-top:16px;max-width:780px">
+      设备安全组 培训资料系统 V3 — 面向现场作业人员与设备维护人员
+    </p>
+    <div class="deck-footer" style="margin-top:auto">
+      <span class="brand">贝泰妮集团 物流部</span>
+      <span class="slide-number" data-current="1" data-total="12"></span>
+    </div>
+  </section>
+
+  <!-- 2. 目录 -->
+  <section class="slide" data-title="目录">
+    <p class="kicker">Contents</p>
+    <h2 class="h2">本手册内容</h2>
+    <ol class="toc-list anim-stagger-list" data-anim-target>
+      <li><span class="n">01</span><span class="t">系统简介 — 是什么 / 解决什么问题 / 系统组成</span><span class="pg">P3</span></li>
+      <li><span class="n">02</span><span class="t">阅读者使用指南 — 怎么扫码 / 5 份培训页 / 现场使用流程</span><span class="pg">P4</span></li>
+      <li><span class="n">03</span><span class="t">自助维护 — 拍视频 / add_training.py / push / Cloudflare</span><span class="pg">P5-6</span></li>
+      <li><span class="n">04</span><span class="t">BTN 品牌汇报 — btn_html_slides.py / H1 完整版</span><span class="pg">P7</span></li>
+      <li><span class="n">05</span><span class="t">技术架构 — GitHub / Cloudflare / 飞书多维表格 / 备份</span><span class="pg">P8</span></li>
+      <li><span class="n">A</span><span class="t">附录 A — 5 份培训页 URL 索引</span><span class="pg">P9</span></li>
+      <li><span class="n">B</span><span class="t">附录 B — 5 个 B 站视频链接</span><span class="pg">P10</span></li>
+      <li><span class="n">C</span><span class="t">附录 C — 关键工具路径 + 变更历史</span><span class="pg">P11-12</span></li>
+    </ol>
+    <div class="deck-footer">
+      <span class="brand">贝泰妮集团 物流部</span>
+      <span class="slide-number" data-current="2" data-total="12"></span>
+    </div>
+  </section>
+
+  <!-- 3. 第 1 章 系统简介 -->
+  <section class="slide" data-title="第 1 章 系统简介">
+    <p class="kicker">Chapter 01</p>
+    <h2 class="h2">系统简介</h2>
+    <p class="lede" style="margin-top:12px">把设备组的 SOP 培训资料做成"扫码即看"的网页系统。</p>
+    <div class="two-col" style="margin-top:28px">
+      <div class="col">
+        <h4>🎯 解决什么问题</h4>
+        <ul>
+          <li><strong>找不到</strong>：纸质 SOP 散落各处，新人不知道放哪</li>
+          <li><strong>看不懂</strong>：纯文字描述不直观，现场作业要反复打电话问</li>
+          <li><strong>不更新</strong>：设备换型 / 流程调整后，老资料没人维护</li>
+          <li><strong>不统一</strong>：飞书 / 微信 / 钉钉 各种版本，链接 30 天就失效</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>📦 系统组成</h4>
+        <ul>
+          <li><strong>5 份 SOP 培训页</strong>（lesson_1 ~ lesson_5）视频 + 重点分析 + 截图</li>
+          <li><strong>5 个 B 站教学视频</strong>（湖州仓现场实拍）</li>
+          <li><strong>5 张 QR 卡</strong>（贴设备旁 / 仓库现场）</li>
+          <li><strong>1 行命令</strong>新增培训资料（add_training.py）</li>
+          <li><strong>永久 hosting</strong>（Cloudflare Pages 全球 CDN）</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout ok" style="margin-top:24px">
+      <div class="label">核心承诺</div>
+      <div class="body">扫码即看 / 永久有效 / 全员可访问（本人 / 内部 / 外部 / 匿名） / 自助更新 5 分钟上线</div>
+    </div>
+    <div class="deck-footer">
+      <span class="brand">贝泰妮集团 物流部</span>
+      <span class="slide-number" data-current="3" data-total="12"></span>
+    </div>
+  </section>
+
+  <!-- 4. 第 2 章 阅读者使用指南 -->
+  <section class="slide" data-title="第 2 章 阅读者使用指南">
+    <p class="kicker">Chapter 02</p>
+    <h2 class="h2">阅读者使用指南</h2>
+    <p class="lede" style="margin-top:8px">现场作业遇到问题，三步搞定。</p>
+    <div class="flow-row" style="margin-top:24px">
+      <div class="step">① 找到 QR 卡</div>
+      <div class="arrow">→</div>
+      <div class="step">② 手机扫码</div>
+      <div class="arrow">→</div>
+      <div class="step">③ 观看视频</div>
+      <div class="arrow">→</div>
+      <div class="step">按步骤操作</div>
+    </div>
+    <h3 style="margin-top:32px;font-size:20px;color:var(--accent)">5 份培训页对应设备</h3>
+    <div class="lesson-grid" style="grid-template-columns:repeat(5,1fr)">
+      <div class="l">
+        <div class="id">01</div>
+        <div class="name">自动贴单机<br>对贴面单报警<br>故障处理</div>
+        <div class="link">lesson_1.html</div>
+      </div>
+      <div class="l">
+        <div class="id">02</div>
+        <div class="name">自动贴单机<br>频繁断底纸 +<br>收纸器不收纸</div>
+        <div class="link">lesson_2.html</div>
+      </div>
+      <div class="l">
+        <div class="id">03</div>
+        <div class="name">标签电眼<br>的调试</div>
+        <div class="link">lesson_3.html</div>
+      </div>
+      <div class="l">
+        <div class="id">04</div>
+        <div class="name">整机开箱<br>调试及操作</div>
+        <div class="link">lesson_4.html</div>
+      </div>
+      <div class="l">
+        <div class="id">05</div>
+        <div class="name">自动分拣机<br>动态秤校准调试</div>
+        <div class="link">lesson_5.html</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:20px">
+      <div class="label">使用场景</div>
+      <div class="body">设备报警 → 看 01/02 故障处理；新设备开箱 → 看 04 整机调试；标签识别不准 → 看 03 电眼调试；动态秤异常 → 看 05 校准流程。</div>
+    </div>
+    <div class="deck-footer">
+      <span class="brand">贝泰妮集团 物流部</span>
+      <span class="slide-number" data-current="4" data-total="12"></span>
+    </div>
+  </section>
+
+  <!-- 5. 第 3 章 自助维护 (上半) — 拍视频 + add_training -->
+  <section class="slide" data-title="第 3 章 自助维护 (上)">
+    <p class="kicker">Chapter 03 · A</p>
+    <h2 class="h2">自助维护 · 拍视频 + 生成培训页</h2>
+    <h3 style="margin-top:20px;font-size:18px;color:var(--accent)">① 现场拍视频（5 分钟）</h3>
+    <div class="two-col" style="margin-top:12px">
+      <div class="col">
+        <h4>📱 拍视频要点</h4>
+        <ul>
+          <li>手机竖屏拍摄（现场讲解更自然）</li>
+          <li>从问题现象开始拍，故障 / 异常先入镜</li>
+          <li>边操作边讲解，步骤清晰不跳跃</li>
+          <li>总时长控制在 3-6 分钟</li>
+          <li>导出文件名改有意义（不要 <code>mmexport*.mp4</code>）</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>🎬 上传 B 站</h4>
+        <ul>
+          <li>B 站账号：喃呵咦檬（UID 405067223）</li>
+          <li>视频分类：科技 · 工业 · 自动化</li>
+          <li>标题模板：<code>湖州仓·[设备名]：[故障名] 处理</code></li>
+          <li>上传完成后记录 BV 号</li>
+        </ul>
+      </div>
+    </div>
+    <h3 style="margin-top:24px;font-size:18px;color:var(--accent)">② 写 lesson HTML（10 分钟）</h3>
+    <p style="font-size:13px;color:var(--text-2);line-height:1.7">
+      用现有 lesson_N.html 当模板复制修改：顶部嵌入 B 站 iframe（用 BV 号生成嵌入 URL），下方写"重点分析 + 步骤拆解 + 截图"。完成 1 份标准 lesson HTML（建议大小 800KB-1.5MB）。
+    </p>
+    <h3 style="margin-top:20px;font-size:18px;color:var(--accent)">③ 一行命令生成（10 秒）</h3>
+    <div class="code-block"><span class="c"># 1 行命令完成 3 件事：复制 HTML + 重生 index.html + 出 QR 卡</span>
+python3 add_training.py \
+  --id 6 \
+  --html my_lesson_6.html \
+  --title <span class="s">"自动分拣机：托盘更换 SOP"</span> \
+  --bvid <span class="v">BV1xxxxxxxx</span> \
+  --duration <span class="s">"4:30"</span>
+
+<span class="c"># 自动产出：</span>
+<span class="k">→</span> hosting/lesson_6.html
+<span class="k">→</span> hosting/index.html  <span class="c">(导航页自动加新卡片)</span>
+<span class="k">→</span> hosting/qr/hosting_6_QR卡.png</div>
+    <div class="deck-footer">
+      <span class="brand">贝泰妮集团 物流部</span>
+      <span class="slide-number" data-current="5" data-total="12"></span>
+    </div>
+  </section>
+
+  <!-- 6. 第 3 章 自助维护 (下半) — push + Cloudflare -->
+  <section class="slide" data-title="第 3 章 自助维护 (下)">
+    <p class="kicker">Chapter 03 · B</p>
+    <h2 class="h2">自助维护 · 部署上线</h2>
+    <h3 style="margin-top:20px;font-size:18px;color:var(--accent)">④ 推送到 GitHub（30 秒）</h3>
+    <div class="code-block">python3 scripts/push_github.py \
+  --token &lt;你的PAT&gt; \
+  --owner 17630934554 \
+  --repo huzhou-training-assets
+
+<span class="c"># 或在 GitHub 网页端：</span>
+<span class="c"># 1. 打开 https://github.com/17630934554/huzhou-training-assets</span>
+<span class="c"># 2. 上传文件 / 编辑 README → 提交</span></div>
+    <h3 style="margin-top:20px;font-size:18px;color:var(--accent)">⑤ Cloudflare Pages 自动部署（1-2 分钟）</h3>
+    <p style="font-size:13px;color:var(--text-2);line-height:1.7;margin-top:6px">
+      GitHub push main → Cloudflare Pages webhook 触发 → 自动构建 → 自动部署。无需人工干预。
+    </p>
+    <h3 style="margin-top:20px;font-size:18px;color:var(--accent)">⑥ 验证部署（30 秒）</h3>
+    <div class="code-block">python3 scripts/verify_urls.py
+
+<span class="c"># 期望输出：所有 5+ 份 lesson + index.html + QR 卡 = HTTP 200</span></div>
+    <div class="callout ok" style="margin-top:20px">
+      <div class="label">完整时间表</div>
+      <div class="body">拍视频 5 分钟 → 写 HTML 10 分钟 → 一行命令 10 秒 → push 30 秒 → Cloudflare 部署 1-2 分钟 → <strong>5 分钟内新培训资料上线可扫码</strong></div>
+    </div>
+    <div class="callout warn" style="margin-top:14px">
+      <div class="label">注意</div>
+      <div class="body">QR 卡和 lesson HTML 永久禁用 "AI 生成" / "湖州仓·设备组" 这两个词（add_training.py 自动校验）。</div>
+    </div>
+    <div class="deck-footer">
+      <span class="brand">贝泰妮集团 物流部</span>
+      <span class="slide-number" data-current="6" data-total="12"></span>
+    </div>
+  </section>
+
+  <!-- 7. 第 4 章 BTN 品牌汇报 -->
+  <section class="slide" data-title="第 4 章 BTN 品牌汇报">
+    <p class="kicker">Chapter 04</p>
+    <h2 class="h2">BTN 品牌汇报生成器</h2>
+    <p class="lede" style="margin-top:8px">除了培训资料，还有 A2 BTN 品牌汇报系统 — 给集团 / 物流部做正式汇报用。</p>
+    <div class="two-col" style="margin-top:24px">
+      <div class="col">
+        <h4>📊 完整 H1 汇报</h4>
+        <ul>
+          <li><strong>btn-report-2026h1.html</strong> · 8 页</li>
+          <li>封面 / 目录 / 部门介绍 / 上半年成绩 / V3 系统 / 改造案例 / 下半年规划 / 结束</li>
+          <li>贝泰妮深蓝 + 金色克制点缀 + 14px 圆角</li>
+          <li>102 个可编辑元素，文字可改后自动保存到 localStorage</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>🛠 生成器</h4>
+        <ul>
+          <li><strong>btn_html_slides.py</strong> · 10 种页面模板</li>
+          <li>YAML 配置 → HTML 输出</li>
+          <li>支持：封面 / 目录 / 章节 / KPI / 双栏 / 视频 / 计划</li>
+          <li>单文件自包含（CSS / JS 全内联）</li>
+          <li>文字可编辑 + 视频内嵌 + 键盘翻页</li>
+        </ul>
+      </div>
+    </div>
+    <h3 style="margin-top:20px;font-size:18px;color:var(--accent)">用法</h3>
+    <div class="code-block"><span class="c"># 1) 编辑 YAML 配置</span>
+vim btn_report_2026h1.yaml
+
+<span class="c"># 2) 生成 HTML</span>
+python3 btn_html_slides.py \
+  --config btn_report_2026h1.yaml \
+  --output btn-report-2026h1.html
+
+<span class="c"># 3) 浏览器打开（键盘 ← → 翻页，T 切主题，F 全屏）</span>
+open btn-report-2026h1.html</div>
+    <div class="callout" style="margin-top:16px">
+      <div class="label">快捷键</div>
+      <div class="body">← → 翻页 · T 循环切换主题 · A 切换动效 · F 全屏 · O 大纲视图</div>
+    </div>
+    <div class="deck-footer">
+      <span class="brand">贝泰妮集团 物流部</span>
+      <span class="slide-number" data-current="7" data-total="12"></span>
+    </div>
+  </section>
+
+  <!-- 8. 第 5 章 技术架构 -->
+  <section class="slide" data-title="第 5 章 技术架构">
+    <p class="kicker">Chapter 05</p>
+    <h2 class="h2">技术架构</h2>
+    <p class="lede" style="margin-top:8px">给 IT 同事 / 接手人看 — 整套系统的底层结构。</p>
+    <div class="flow-row" style="margin-top:24px">
+      <div class="step" style="min-width:140px">📱 现场拍视频</div>
+      <div class="arrow">→</div>
+      <div class="step" style="min-width:140px">🎬 B 站上传</div>
+      <div class="arrow">→</div>
+      <div class="step" style="min-width:160px">📝 写 lesson HTML</div>
+    </div>
+    <div class="flow-row" style="margin-top:14px">
+      <div class="step" style="min-width:140px">⚙️ add_training.py</div>
+      <div class="arrow">→</div>
+      <div class="step" style="min-width:140px">📦 GitHub push</div>
+      <div class="arrow">→</div>
+      <div class="step" style="min-width:160px">☁️ Cloudflare Pages</div>
+      <div class="arrow">→</div>
+      <div class="step" style="min-width:140px">📱 用户扫码</div>
+    </div>
+    <div class="two-col" style="margin-top:28px">
+      <div class="col">
+        <h4>🗄 关键组件</h4>
+        <ul>
+          <li><strong>GitHub 私有仓库</strong> — 17630934554/huzhou-training-assets</li>
+          <li><strong>Cloudflare Pages</strong> — huzhou-training 项目</li>
+          <li><strong>飞书多维表格</strong> — 培训资料库</li>
+          <li><strong>Python 脚本</strong> — add_training / push_github / verify_urls</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>🔒 安全与备份</h4>
+        <ul>
+          <li>GitHub 仓库 Private</li>
+          <li>PAT token 不入库（一次一换）</li>
+          <li>Cloudflare 部署保留全部历史版本</li>
+          <li>本地 hosting/ 目录完整 git 历史</li>
+          <li>V2.1 hosting 部署在 _old_qr_backup/</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout warn" style="margin-top:16px">
+      <div class="label">维护建议</div>
+      <div class="body">每月检查 Cloudflare 部署状态；每季度备份 hosting/ 到飞书云空间；PAT token 到期前 2 周续期。</div>
+    </div>
+    <div class="deck-footer">
+      <span class="brand">贝泰妮集团 物流部</span>
+      <span class="slide-number" data-current="8" data-total="12"></span>
+    </div>
+    </div>
+  </section>
+
+  <!-- 9. 附录 A — 5 份培训页 URL -->
+  <section class="slide" data-title="附录 A">
+    <p class="kicker">Appendix A</p>
+    <h2 class="h2">5 份培训页 URL 索引</h2>
+    <table class="tbl" style="margin-top:24px">
+      <thead>
+        <tr><th style="width:60px">编号</th><th>设备 + 培训内容</th><th>URL</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>01</strong></td><td>自动贴单机：对贴面单报警故障处理</td><td class="url">huzhou-training.pages.dev/lesson_1.html</td></tr>
+        <tr><td><strong>02</strong></td><td>自动贴单机：频繁断底纸+收纸器不收纸故障处理</td><td class="url">huzhou-training.pages.dev/lesson_2.html</td></tr>
+        <tr><td><strong>03</strong></td><td>自动贴单机：标签电眼的调试</td><td class="url">huzhou-training.pages.dev/lesson_3.html</td></tr>
+        <tr><td><strong>04</strong></td><td>自动贴单机：整机开箱调试及操作</td><td class="url">huzhou-training.pages.dev/lesson_4.html</td></tr>
+        <tr><td><strong>05</strong></td><td>自动分拣机：动态秤校准调试</td><td class="url">huzhou-training.pages.dev/lesson_5.html</td></tr>
+      </tbody>
+    </table>
+    <div class="callout" style="margin-top:20px">
+      <div class="label">主域名</div>
+      <div class="body"><strong>https://huzhou-training.pages.dev</strong> — Cloudflare Pages 全球 CDN，永久有效</div>
+    </div>
+    <div class="deck-footer">
+      <span class="brand">贝泰妮集团 物流部</span>
+      <span class="slide-number" data-current="9" data-total="12"></span>
+    </div>
+  </section>
+
+  <!-- 10. 附录 B — 5 个 B 站视频 -->
+  <section class="slide" data-title="附录 B">
+    <p class="kicker">Appendix B</p>
+    <h2 class="h2">5 个 B 站教学视频</h2>
+    <p class="lede" style="margin-top:8px">B 站账号：<strong>喃呵咦檬</strong>（UID 405067223）</p>
+    <table class="tbl" style="margin-top:24px">
+      <thead>
+        <tr><th style="width:50px">编号</th><th style="width:120px">BV 号</th><th>培训内容</th><th>嵌入 URL</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>01</strong></td><td class="url">BV1jQjg6KELs</td><td>对贴面单报警故障处理</td><td class="url">bilibili.com/video/BV1jQjg6KELs</td></tr>
+        <tr><td><strong>02</strong></td><td class="url">BV1qSjg6qErc</td><td>频繁断底纸+收纸器不收纸</td><td class="url">bilibili.com/video/BV1qSjg6qErc</td></tr>
+        <tr><td><strong>03</strong></td><td class="url">BV1LRjg6PEpi</td><td>标签电眼的调试</td><td class="url">bilibili.com/video/BV1LRjg6PEpi</td></tr>
+        <tr><td><strong>04</strong></td><td class="url">BV1qSjg6qEbp</td><td>整机开箱调试及操作</td><td class="url">bilibili.com/video/BV1qSjg6qEbp</td></tr>
+        <tr><td><strong>05</strong></td><td class="url">BV1cWj365Ep8</td><td>动态秤校准调试</td><td class="url">bilibili.com/video/BV1cWj365Ep8</td></tr>
+      </tbody>
+    </table>
+    <div class="callout" style="margin-top:20px">
+      <div class="label">视频特点</div>
+      <div class="body">手机竖屏实拍 · 现场讲解 · 3-6 分钟 · 视频嵌入 lesson HTML（&lt;iframe&gt;）</div>
+    </div>
+    <div class="deck-footer">
+      <span class="brand">贝泰妮集团 物流部</span>
+      <span class="slide-number" data-current="10" data-total="12"></span>
+    </div>
+  </section>
+
+  <!-- 11. 附录 C — 关键工具路径 -->
+  <section class="slide" data-title="附录 C">
+    <p class="kicker">Appendix C</p>
+    <h2 class="h2">关键工具路径</h2>
+    <table class="tbl" style="margin-top:24px;font-size:12px">
+      <thead>
+        <tr><th>工具</th><th>路径</th><th>用途</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>add_training.py</strong></td><td class="url">hosting/add_training.py</td><td>1 行命令新增培训资料</td></tr>
+        <tr><td><strong>push_github.py</strong></td><td class="url">hosting/scripts/push_github.py</td><td>GitHub Contents API 推送</td></tr>
+        <tr><td><strong>verify_urls.py</strong></td><td class="url">hosting/scripts/verify_urls.py</td><td>部署后 URL 200 验证</td></tr>
+        <tr><td><strong>repack_zip.py</strong></td><td class="url">hosting/scripts/repack_zip.py</td><td>hosting 打包成 zip</td></tr>
+        <tr><td><strong>deploy_sop_v3.md</strong></td><td class="url">hosting/deploy_sop_v3.md</td><td>V3 部署 SOP 文档</td></tr>
+        <tr><td><strong>btn_html_slides.py</strong></td><td class="url">btn_corporate/scripts/btn_html_slides.py</td><td>BTN 品牌汇报生成器</td></tr>
+        <tr><td><strong>build_self_contained.py</strong></td><td class="url">btn_corporate/scripts/build_self_contained.py</td><td>HTML 打包单文件自包含</td></tr>
+        <tr><td><strong>btn-corporate.css</strong></td><td class="url">btn_corporate/assets/btn-corporate.css</td><td>贝泰妮品牌主题</td></tr>
+        <tr><td><strong>HTML 模板</strong></td><td class="url">_v3_template/</td><td>新 lesson HTML 模板</td></tr>
+        <tr><td><strong>V2.1 备份</strong></td><td class="url">_old_qr_backup/</td><td>飞书 / Coze 短链历史版本</td></tr>
+      </tbody>
+    </table>
+    <div class="callout ok" style="margin-top:20px">
+      <div class="label">路径规范</div>
+      <div class="body">所有脚本在 <code>hosting/scripts/</code> 统一管理；所有 lesson 在 <code>hosting/</code> 根目录；QR 卡在 <code>hosting/qr/</code>。</div>
+    </div>
+    <div class="deck-footer">
+      <span class="brand">贝泰妮集团 物流部</span>
+      <span class="slide-number" data-current="11" data-total="12"></span>
+    </div>
+  </section>
+
+  <!-- 12. 附录 D — 变更历史 + 结束 -->
+  <section class="slide brand-bg" data-title="附录 D · 变更历史">
+    <div class="hero-deco gold"></div>
+    <p class="kicker">Appendix D · Version History</p>
+    <h2 class="h2">变更历史</h2>
+    <table class="tbl" style="margin-top:24px;background:rgba(255,255,255,.95)">
+      <thead>
+        <tr><th>版本</th><th>日期</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>V3.0</strong></td><td>2026-06-16</td><td>GitHub + Cloudflare Pages 自动部署（永久有效）</td></tr>
+        <tr><td><strong>V2.1</strong></td><td>2026-06-16 19:34</td><td>Cloudflare Pages 拖拽部署 5 份</td></tr>
+        <tr><td><strong>V2</strong></td><td>2026-06-16 17:00</td><td>飞书 docx 路线作废（飞书 system 强制登录拦截）</td></tr>
+        <tr><td><strong>V1</strong></td><td>2026-06-16 16:00</td><td>飞书 file HTML（飞书 App 扫码空白，仅作 backup）</td></tr>
+        <tr><td><strong>V0</strong></td><td>2026-06-16 14:00</td><td>Coze 短链（30 天到期，已自然失效）</td></tr>
+      </tbody>
+    </table>
+    <div class="callout ok" style="margin-top:24px;background:rgba(255,255,255,.12);border-left-color:rgba(255,255,255,.5)">
+      <div class="label" style="background:rgba(255,255,255,.9);color:var(--accent)">V3 里程碑</div>
+      <div class="body" style="color:#fff">2026-06-18 · V3 自助扩展验证通过（GitHub 网页端改 README → Cloudflare 自动部署 4 分钟） · 5 份培训资料 + 1 行命令新增 + A2 BTN 品牌汇报系统</div>
+    </div>
+    <div style="margin-top:48px;text-align:center;font-size:14px;opacity:.85;letter-spacing:.08em">
+      ← → 翻页 · T 切主题 · A 切动效 · F 全屏
+    </div>
+    <div class="deck-footer">
+      <span class="brand">贝泰妮集团 物流部</span>
+      <span class="slide-number" data-current="12" data-total="12"></span>
+    </div>
+  </section>
+
+</div>
+<script src="../../skills/html-ppt/assets/runtime.js"></script>
+</body>
+</html>
