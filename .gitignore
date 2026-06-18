@@ -21,8 +21,16 @@ training_hosting.zip
 
 # === QR 卡 PNG（生成物，add_training.py 重新生成） ===
 # 注意：hosting/qr/ 目录整体忽略（QR 卡是 build 产物，不是 source）
-qr/
-# 但 qr/ 里如果有重要参考图可单独加 !qr/ref_xxx.png 例外
+# 用 /qr/ 锚定到 hosting 根目录，避免误匹配 assets/qr/ 目录
+/qr/
+# 但 qr/ 里如果有重要参考图可单独加 !/qr/ref_xxx.png 例外
+
+# 例外：assets/qr/ 目录是「飞书多维表格 record QR卡 字段引用」的 hosted 版本
+# - 文件名用英文短名（lesson_1.png / manual.png / h1_report.png）避免 URL 编码
+# - 推上 GitHub 后走 Cloudflare Pages 公开访问
+# - 飞书多维表格 record「QR卡」字段值 = https://huzhou-training.pages.dev/assets/qr/xxx.png
+!assets/qr/*.png
+!assets/qr/.gitkeep
 
 # === 系统文件 ===
 .DS_Store
@@ -37,7 +45,6 @@ desktop.ini
 
 # === Git ===
 .git/
-.gitignore
 .gitattributes
 
 # === 私有凭证（如果大刘误提交） ===
