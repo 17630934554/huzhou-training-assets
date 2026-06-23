@@ -30,10 +30,34 @@
 .flow-row .arrow{color:var(--accent-2);font-size:22px;font-weight:800}
 
 .code-block{background:#0a2540;color:#e6edf3;padding:18px 22px;border-radius:12px;font-family:var(--font-mono);font-size:13px;line-height:1.7;margin:14px 0;overflow-x:auto;white-space:pre}
-.code-block .c{color:#7d8590;font-style:italic}
-.code-block .k{color:#ff7b72}
+.code-block .c{color:#9da7b3;font-style:italic}
+.code-block .k{color:#ff7b72;font-weight:600}
 .code-block .s{color:#a5d6ff}
 .code-block .v{color:#d2a8ff}
+
+/* === V3.1 美化（2026-06-23）===\*/
+/* 返回顶部按钮 */
+.back-to-top{position:fixed;right:24px;bottom:24px;width:48px;height:48px;border-radius:50%;background:rgba(29,78,216,.92);color:#fff;font-size:24px;line-height:48px;text-align:center;cursor:pointer;box-shadow:0 4px 12px rgba(29,78,216,.3);opacity:0;transform:translateY(20px);transition:opacity .3s,transform .3s;z-index:9990;border:none;font-family:inherit}
+.back-to-top.show{opacity:1;transform:translateY(0)}
+.back-to-top:hover{background:#1d4ed8;transform:translateY(-2px) scale(1.05)}
+/* 右侧章节导航 */
+.chapter-nav{position:fixed;right:24px;top:50%;transform:translateY(-50%);z-index:9990;display:flex;flex-direction:column;gap:6px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);padding:10px 8px;border-radius:14px;box-shadow:0 6px 20px rgba(18,24,40,.1)}
+.chapter-nav a{width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--accent-2);text-decoration:none;border-radius:8px;transition:all .2s}
+.chapter-nav a:hover{background:var(--accent);color:#fff;transform:scale(1.1)}
+.chapter-nav a.active{background:var(--accent);color:#fff}
+@media (max-width:900px){.chapter-nav{display:none}}
+@media (max-width:768px){.back-to-top{width:44px;height:44px;line-height:44px;font-size:20px}}
+/* 章节号中文化 */
+.kicker{font-family:var(--font-sans,'Microsoft YaHei',sans-serif);font-weight:600;letter-spacing:.18em;text-transform:none}
+/* 表格 hover 高亮 */
+table.tbl tbody tr{transition:background .15s}
+table.tbl tbody tr:hover td{background:rgba(29,78,216,.04)}
+/* 章节分隔视觉 */
+.slide{padding:64px 96px;box-sizing:border-box;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-start;position:relative;border-bottom:1px solid rgba(0,0,0,.04)}
+.slide .h2{margin-top:8px;margin-bottom:8px}
+/* 列表行距优化 */
+.slide ul li{line-height:1.75;margin-bottom:4px}
+.slide ol li{line-height:1.75;margin-bottom:6px}
 
 .lesson-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin:24px 0}
 .lesson-grid .l{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 16px;position:relative;transition:transform .25s var(--ease),box-shadow .25s var(--ease);cursor:pointer}
@@ -95,18 +119,18 @@ table.tbl td .tag{display:inline-block;background:var(--btn-gold);color:#fff;fon
   </section>
 
   <!-- 2. 目录 -->
-  <section class="slide" data-title="目录">
-    <p class="kicker">Contents</p>
+  <section class="slide" id="toc" data-title="目录">
+    <p class="kicker">Contents · 目录</p>
     <h2 class="h2">本手册内容</h2>
     <ol class="toc-list anim-stagger-list" data-anim-target>
-      <li><span class="n">01</span><span class="t">系统简介 — 是什么 / 解决什么问题 / 系统组成</span><span class="pg">P3</span></li>
-      <li><span class="n">02</span><span class="t">阅读者使用指南 — 怎么扫码 / 5 份培训页 / 现场使用流程</span><span class="pg">P4</span></li>
-      <li><span class="n">03</span><span class="t">自助维护 — 拍视频 / add_training.py / push / Cloudflare</span><span class="pg">P5-6</span></li>
-      <li><span class="n">04</span><span class="t">BTN 品牌汇报 — btn_html_slides.py / H1 完整版</span><span class="pg">P7</span></li>
-      <li><span class="n">05</span><span class="t">技术架构 — GitHub / Cloudflare / 飞书多维表格 / 备份</span><span class="pg">P8</span></li>
-      <li><span class="n">A</span><span class="t">附录 A — 5 份培训页 URL 索引</span><span class="pg">P9</span></li>
-      <li><span class="n">B</span><span class="t">附录 B — 5 个 B 站视频链接</span><span class="pg">P10</span></li>
-      <li><span class="n">C</span><span class="t">附录 C — 关键工具路径 + 变更历史</span><span class="pg">P11-12</span></li>
+      <li><a href="#chapter-1" style="text-decoration:none;color:inherit;display:flex;align-items:baseline;gap:20px;width:100%"><span class="n">01</span><span class="t">系统简介 — 是什么 / 解决什么问题 / 系统组成</span></a></li>
+      <li><a href="#chapter-2" style="text-decoration:none;color:inherit;display:flex;align-items:baseline;gap:20px;width:100%"><span class="n">02</span><span class="t">阅读者使用指南 — 怎么扫码 / 5 份培训页 / 现场使用流程</span></a></li>
+      <li><a href="#chapter-3" style="text-decoration:none;color:inherit;display:flex;align-items:baseline;gap:20px;width:100%"><span class="n">03</span><span class="t">自助维护 — 拍视频 / add_training.py / push / Cloudflare</span></a></li>
+      <li><a href="#chapter-4" style="text-decoration:none;color:inherit;display:flex;align-items:baseline;gap:20px;width:100%"><span class="n">04</span><span class="t">BTN 品牌汇报 — btn_html_slides.py / H1 完整版</span></a></li>
+      <li><a href="#chapter-5" style="text-decoration:none;color:inherit;display:flex;align-items:baseline;gap:20px;width:100%"><span class="n">05</span><span class="t">技术架构 — GitHub / Cloudflare / 飞书多维表格 / 备份</span></a></li>
+      <li><a href="#appendix-a" style="text-decoration:none;color:inherit;display:flex;align-items:baseline;gap:20px;width:100%"><span class="n">A</span><span class="t">附录 A — 5 份培训页 URL 索引</span></a></li>
+      <li><a href="#appendix-b" style="text-decoration:none;color:inherit;display:flex;align-items:baseline;gap:20px;width:100%"><span class="n">B</span><span class="t">附录 B — 5 个 B 站视频链接</span></a></li>
+      <li><a href="#appendix-c" style="text-decoration:none;color:inherit;display:flex;align-items:baseline;gap:20px;width:100%"><span class="n">C</span><span class="t">附录 C — 关键工具路径 + 变更历史</span></a></li>
     </ol>
     <div class="deck-footer">
       <span class="brand">贝泰妮集团 物流部</span>
@@ -115,8 +139,8 @@ table.tbl td .tag{display:inline-block;background:var(--btn-gold);color:#fff;fon
   </section>
 
   <!-- 3. 第 1 章 系统简介 -->
-  <section class="slide" data-title="第 1 章 系统简介">
-    <p class="kicker">Chapter 01</p>
+  <section class="slide" id="chapter-1" data-title="第 1 章 系统简介">
+    <p class="kicker">第 1 章 · 系统简介</p>
     <h2 class="h2">系统简介</h2>
     <p class="lede" style="margin-top:12px">把设备组的 SOP 培训资料做成"扫码即看"的网页系统。</p>
     <div class="two-col" style="margin-top:28px">
@@ -151,8 +175,8 @@ table.tbl td .tag{display:inline-block;background:var(--btn-gold);color:#fff;fon
   </section>
 
   <!-- 4. 第 2 章 阅读者使用指南 -->
-  <section class="slide" data-title="第 2 章 阅读者使用指南">
-    <p class="kicker">Chapter 02</p>
+  <section class="slide" id="chapter-2" data-title="第 2 章 阅读者使用指南">
+    <p class="kicker">第 2 章 · 阅读者使用指南</p>
     <h2 class="h2">阅读者使用指南</h2>
     <p class="lede" style="margin-top:8px">现场作业遇到问题，三步搞定。</p>
     <div class="flow-row" style="margin-top:24px">
@@ -203,8 +227,8 @@ table.tbl td .tag{display:inline-block;background:var(--btn-gold);color:#fff;fon
   </section>
 
   <!-- 5. 第 3 章 自助维护 (上半) — 拍视频 + add_training -->
-  <section class="slide" data-title="第 3 章 自助维护 (上)">
-    <p class="kicker">Chapter 03 · A</p>
+  <section class="slide" id="chapter-3" data-title="第 3 章 自助维护 (上)">
+    <p class="kicker">第 3 章 · 自助维护（A）</p>
     <h2 class="h2">自助维护 · 拍视频 + 生成培训页</h2>
     <h3 style="margin-top:20px;font-size:18px;color:var(--accent)">① 现场拍视频（5 分钟）</h3>
     <div class="two-col" style="margin-top:12px">
@@ -253,7 +277,7 @@ python3 add_training.py \
 
   <!-- 6. 第 3 章 自助维护 (下半) — push + Cloudflare -->
   <section class="slide" data-title="第 3 章 自助维护 (下)">
-    <p class="kicker">Chapter 03 · B</p>
+    <p class="kicker">第 3 章 · 自助维护（B）</p>
     <h2 class="h2">自助维护 · 部署上线</h2>
     <h3 style="margin-top:20px;font-size:18px;color:var(--accent)">④ 推送到 GitHub（30 秒）</h3>
     <div class="code-block">python3 scripts/push_github.py \
@@ -287,8 +311,8 @@ python3 add_training.py \
   </section>
 
   <!-- 7. 第 4 章 BTN 品牌汇报 -->
-  <section class="slide" data-title="第 4 章 BTN 品牌汇报">
-    <p class="kicker">Chapter 04</p>
+  <section class="slide" id="chapter-4" data-title="第 4 章 BTN 品牌汇报">
+    <p class="kicker">第 4 章 · BTN 品牌汇报</p>
     <h2 class="h2">BTN 品牌汇报生成器</h2>
     <p class="lede" style="margin-top:8px">除了培训资料，还有 A2 BTN 品牌汇报系统 — 给集团 / 物流部做正式汇报用。</p>
     <div class="two-col" style="margin-top:24px">
@@ -334,25 +358,24 @@ open btn-report-2026h1.html</div>
   </section>
 
   <!-- 8. 第 5 章 技术架构 -->
-  <section class="slide" data-title="第 5 章 技术架构">
-    <p class="kicker">Chapter 05</p>
+  <section class="slide" id="chapter-5" data-title="第 5 章 技术架构">
+    <p class="kicker">第 5 章 · 技术架构</p>
     <h2 class="h2">技术架构</h2>
     <p class="lede" style="margin-top:8px">给 IT 同事 / 接手人看 — 整套系统的底层结构。</p>
-    <div class="flow-row" style="margin-top:24px">
-      <div class="step" style="min-width:140px">📱 现场拍视频</div>
+    <div class="flow-row" style="margin-top:24px;flex-wrap:wrap;justify-content:center">
+      <div class="step" style="min-width:130px;font-size:14px">📱 现场拍视频</div>
       <div class="arrow">→</div>
-      <div class="step" style="min-width:140px">🎬 B 站上传</div>
+      <div class="step" style="min-width:130px;font-size:14px">🎬 B 站上传</div>
       <div class="arrow">→</div>
-      <div class="step" style="min-width:160px">📝 写 lesson HTML</div>
-    </div>
-    <div class="flow-row" style="margin-top:14px">
-      <div class="step" style="min-width:140px">⚙️ add_training.py</div>
+      <div class="step" style="min-width:140px;font-size:14px">📝 写 lesson HTML</div>
       <div class="arrow">→</div>
-      <div class="step" style="min-width:140px">📦 GitHub push</div>
+      <div class="step" style="min-width:140px;font-size:14px">⚙️ add_training.py</div>
       <div class="arrow">→</div>
-      <div class="step" style="min-width:160px">☁️ Cloudflare Pages</div>
+      <div class="step" style="min-width:130px;font-size:14px">📦 GitHub push</div>
       <div class="arrow">→</div>
-      <div class="step" style="min-width:140px">📱 用户扫码</div>
+      <div class="step" style="min-width:150px;font-size:14px">☁️ Cloudflare Pages</div>
+      <div class="arrow">→</div>
+      <div class="step" style="min-width:130px;font-size:14px">📱 用户扫码</div>
     </div>
     <div class="two-col" style="margin-top:28px">
       <div class="col">
@@ -383,23 +406,22 @@ open btn-report-2026h1.html</div>
       <span class="brand">贝泰妮集团 物流部</span>
       <span class="slide-number" data-current="8" data-total="12"></span>
     </div>
-    </div>
   </section>
 
   <!-- 9. 附录 A — 5 份培训页 URL -->
-  <section class="slide" data-title="附录 A">
-    <p class="kicker">Appendix A</p>
+  <section class="slide" id="appendix-a" data-title="附录 A">
+    <p class="kicker">附录 A · 培训页 URL 索引</p>
     <h2 class="h2">5 份培训页 URL 索引</h2>
     <table class="tbl" style="margin-top:24px">
       <thead>
         <tr><th style="width:60px">编号</th><th>设备 + 培训内容</th><th>URL</th></tr>
       </thead>
       <tbody>
-        <tr><td><strong>01</strong></td><td>自动贴单机：对贴面单报警故障处理</td><td class="url">https://huzhou-training.pages.dev/lesson_1.html</td></tr>
-        <tr><td><strong>02</strong></td><td>自动贴单机：频繁断底纸+收纸器不收纸故障处理</td><td class="url">https://huzhou-training.pages.dev/lesson_2.html</td></tr>
-        <tr><td><strong>03</strong></td><td>自动贴单机：标签电眼的调试</td><td class="url">https://huzhou-training.pages.dev/lesson_3.html</td></tr>
-        <tr><td><strong>04</strong></td><td>自动贴单机：整机开箱调试及操作</td><td class="url">https://huzhou-training.pages.dev/lesson_4.html</td></tr>
-        <tr><td><strong>05</strong></td><td>自动分拣机：动态秤校准调试</td><td class="url">https://huzhou-training.pages.dev/lesson_5.html</td></tr>
+        <tr><td><strong>01</strong></td><td>自动贴单机：对贴面单报警故障处理</td><td class="url">huzhou-training.pages.dev/lesson_1.html</td></tr>
+        <tr><td><strong>02</strong></td><td>自动贴单机：频繁断底纸+收纸器不收纸故障处理</td><td class="url">huzhou-training.pages.dev/lesson_2.html</td></tr>
+        <tr><td><strong>03</strong></td><td>自动贴单机：标签电眼的调试</td><td class="url">huzhou-training.pages.dev/lesson_3.html</td></tr>
+        <tr><td><strong>04</strong></td><td>自动贴单机：整机开箱调试及操作</td><td class="url">huzhou-training.pages.dev/lesson_4.html</td></tr>
+        <tr><td><strong>05</strong></td><td>自动分拣机：动态秤校准调试</td><td class="url">huzhou-training.pages.dev/lesson_5.html</td></tr>
       </tbody>
     </table>
     <div class="callout" style="margin-top:20px">
@@ -413,8 +435,8 @@ open btn-report-2026h1.html</div>
   </section>
 
   <!-- 10. 附录 B — 5 个 B 站视频 -->
-  <section class="slide" data-title="附录 B">
-    <p class="kicker">Appendix B</p>
+  <section class="slide" id="appendix-b" data-title="附录 B">
+    <p class="kicker">附录 B · B 站教学视频</p>
     <h2 class="h2">5 个 B 站教学视频</h2>
     <p class="lede" style="margin-top:8px">B 站账号：<strong>喃呵咦檬</strong>（UID 405067223）</p>
     <table class="tbl" style="margin-top:24px">
@@ -440,8 +462,8 @@ open btn-report-2026h1.html</div>
   </section>
 
   <!-- 11. 附录 C — 关键工具路径 -->
-  <section class="slide" data-title="附录 C">
-    <p class="kicker">Appendix C</p>
+  <section class="slide" id="appendix-c" data-title="附录 C">
+    <p class="kicker">附录 C · 关键工具路径</p>
     <h2 class="h2">关键工具路径</h2>
     <table class="tbl" style="margin-top:24px;font-size:12px">
       <thead>
@@ -471,9 +493,9 @@ open btn-report-2026h1.html</div>
   </section>
 
   <!-- 12. 附录 D — 变更历史 + 结束 -->
-  <section class="slide brand-bg" data-title="附录 D · 变更历史">
+  <section class="slide brand-bg" id="appendix-d" data-title="附录 D · 变更历史">
     <div class="hero-deco gold"></div>
-    <p class="kicker">Appendix D · Version History</p>
+    <p class="kicker">附录 D · 变更历史</p>
     <h2 class="h2">变更历史</h2>
     <table class="tbl" style="margin-top:24px;background:rgba(255,255,255,.95)">
       <thead>
@@ -501,6 +523,64 @@ open btn-report-2026h1.html</div>
   </section>
 
 </div>
+
+<!-- 右侧章节导航 -->
+<nav class="chapter-nav" aria-label="章节导航">
+  <a href="#toc" data-target="toc" title="目录">目</a>
+  <a href="#chapter-1" data-target="chapter-1" title="第 1 章">1</a>
+  <a href="#chapter-2" data-target="chapter-2" title="第 2 章">2</a>
+  <a href="#chapter-3" data-target="chapter-3" title="第 3 章">3</a>
+  <a href="#chapter-4" data-target="chapter-4" title="第 4 章">4</a>
+  <a href="#chapter-5" data-target="chapter-5" title="第 5 章">5</a>
+  <a href="#appendix-a" data-target="appendix-a" title="附录 A">A</a>
+  <a href="#appendix-b" data-target="appendix-b" title="附录 B">B</a>
+  <a href="#appendix-c" data-target="appendix-c" title="附录 C">C</a>
+  <a href="#appendix-d" data-target="appendix-d" title="附录 D">D</a>
+</nav>
+
+<!-- 返回顶部按钮 -->
+<button class="back-to-top" aria-label="返回顶部" title="返回顶部">↑</button>
+
+<script>
+// 滚动监听：返回顶部 + 章节 active 高亮
+(function(){
+  function ready(fn){ if(document.readyState!='loading')fn(); else document.addEventListener('DOMContentLoaded',fn); }
+  ready(function(){
+    var btn = document.querySelector('.back-to-top');
+    var navLinks = document.querySelectorAll('.chapter-nav a');
+    if(btn){
+      btn.addEventListener('click', function(){
+        window.scrollTo({top:0, behavior:'smooth'});
+      });
+    }
+    // 收集所有 section
+    var sections = [];
+    navLinks.forEach(function(link){
+      var id = link.getAttribute('data-target');
+      var sec = document.getElementById(id);
+      if(sec) sections.push({id:id, el:sec, link:link});
+    });
+    function update(){
+      var scrollY = window.scrollY || window.pageYOffset;
+      var winH = window.innerHeight;
+      // 返回顶部按钮
+      if(btn) btn.classList.toggle('show', scrollY > 400);
+      // 当前章节（视口中部最靠近的 section）
+      var mid = scrollY + winH * 0.35;
+      var active = null;
+      sections.forEach(function(s){
+        var top = s.el.offsetTop;
+        var bottom = top + s.el.offsetHeight;
+        if(mid >= top && mid < bottom) active = s;
+      });
+      navLinks.forEach(function(l){ l.classList.remove('active'); });
+      if(active) active.link.classList.add('active');
+    }
+    window.addEventListener('scroll', update, {passive:true});
+    update();
+  });
+})();
+</script>
 <script src="../../skills/html-ppt/assets/runtime.js"></script>
 </body>
 </html>
