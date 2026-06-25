@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>安环巡检监控系统 - 实时看板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#070b1e;--card:#0d1333;--card2:#111a3e;
+  --cyan:#00d4ff;--cyan2:#0099cc;
+  --p0:#ff4757;--p1:#ffa502;--p2:#2ed573;
+  --txt:#e4e8f4;--muted:#5a6b99;--border:#1a2456;
+  --font:'Microsoft YaHei','PingFang SC',sans-serif;
+}
+html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--txt);overflow-x:hidden}
+body{display:flex;flex-direction:column}
+
+/* 顶部栏 */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 24px;background:linear-gradient(135deg,#0a1035,#111a45);
+  border-bottom:1px solid var(--border);min-height:52px;flex-shrink:0;
+}
+.topbar .title{font-size:18px;font-weight:700;letter-spacing:2px;color:var(--cyan)}
+.topbar .title span{font-size:12px;color:var(--muted);margin-left:12px;font-weight:400;letter-spacing:0}
+.topbar .right{display:flex;align-items:center;gap:16px;font-size:13px;color:var(--muted)}
+.topbar .clock{font-size:20px;font-weight:600;color:var(--txt);font-variant-numeric:tabular-nums}
+.pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--p2);display:inline-block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(46,213,115,.6)}50%{opacity:.7;box-shadow:0 0 0 6px rgba(46,213,115,0)}}
+
+/* 主区域 */
+.main{flex:1;display:grid;grid-template-rows:auto 1fr auto;gap:14px;padding:14px 20px;overflow:hidden}
+
+/* KPI 卡片行 */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.kpi{
+  background:linear-gradient(145deg,var(--card),var(--card2));
+  border:1px solid var(--border);border-radius:10px;padding:16px 20px;position:relative;overflow:hidden;
+}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:10px 10px 0 0}
+.kpi.p0::after{background:var(--p0)}.kpi.p1::after{background:var(--p1)}.kpi.p2::after{background:var(--p2)}.kpi.cyan::after{background:var(--cyan)}
+.kpi .label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.kpi .val{font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+.kpi .sub{font-size:11px;color:var(--muted);margin-top:4px}
+.kpi .val.cyan{color:var(--cyan)}.kpi .val.red{color:var(--p0)}.kpi .val.orange{color:var(--p1)}.kpi .val.green{color:var(--p2)}
+
+/* 中间图表行 */
+.chart-row{display:grid;grid-template-columns:3fr 2fr;gap:14px;min-height:0}
+.panel{
+  background:linear-gradient(145deg,var(--card),var(--card2));
+  border:1px solid var(--border);border-radius:10px;padding:16px 18px;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.panel .ptitle{font-size:13px;font-weight:600;color:var(--cyan);margin-bottom:10px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.panel .ptitle::before{content:'';width:3px;height:14px;background:var(--cyan);border-radius:2px}
+.panel .chart-wrap{flex:1;position:relative;min-height:0}
+
+/* 底部行 */
+.bottom-row{display:grid;grid-template-columns:2fr 3fr;gap:14px;min-height:0}
+.cam-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cam-card{
+  background:rgba(17,26,62,.6);border:1px solid var(--border);border-radius:8px;
+  padding:12px;display:flex;flex-direction:column;gap:4px;
+}
+.cam-card .cam-name{font-size:12px;font-weight:600;color:var(--txt)}
+.cam-card .cam-info{font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
+.cam-card .cam-status{display:flex;align-items:center;gap:4px;font-size:11px}
+.cam-card .cam-status .dot{width:6px;height:6px;border-radius:50%}
+.cam-card .cam-status .dot.on{background:var(--p2);box-shadow:0 0 6px rgba(46,213,115,.4)}
+.cam-card .cam-status .dot.off{background:#666}
+
+/* 告警列表 */
+.alert-table{width:100%;border-collapse:collapse;font-size:12px}
+.alert-table thead th{text-align:left;color:var(--muted);font-weight:500;padding:6px 8px;border-bottom:1px solid var(--border);white-space:nowrap}
+.alert-table tbody tr{border-bottom:1px solid rgba(26,36,86,.5);transition:background .2s}
+.alert-table tbody tr:hover{background:rgba(0,212,255,.05)}
+.alert-table tbody td{padding:7px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.badge.p0{background:rgba(255,71,87,.15);color:var(--p0)}
+.badge.p1{background:rgba(255,165,2,.15);color:var(--p1)}
+.badge.p2{background:rgba(46,213,115,.15);color:var(--p2)}
+.badge.done{background:rgba(46,213,115,.12);color:var(--p2)}
+.badge.pending{background:rgba(255,71,87,.12);color:var(--p0)}
+.badge.progress{background:rgba(255,165,2,.12);color:var(--p1)}
+
+/* 滚动 */
+.scroll-y{overflow-y:auto;flex:1;min-height:0}
+.scroll-y::-webkit-scrollbar{width:4px}
+.scroll-y::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* 全屏按钮 */
+.btn-fs{background:none;border:1px solid var(--border);color:var(--muted);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;font-family:var(--font)}
+.btn-fs:hover{border-color:var(--cyan);color:var(--cyan)}
+
+/* 响应式 */
+@media(max-width:900px){
+  .kpi-row{grid-template-columns:repeat(2,1fr)}
+  .chart-row,.bottom-row{grid-template-columns:1fr}
+  .main{overflow-y:auto;grid-template-rows:auto}
+}
+@media(max-width:480px){
+  .kpi-row{grid-template-columns:1fr 1fr}
+  .kpi .val{font-size:24px}
+  .main{padding:10px}
+}
+
+/* 数据源标识 */
+.datasource{font-size:10px;color:var(--muted);opacity:.7}
+.datasource.live{color:var(--p2)}
+</style>
+</head>
+<body>
+
+<!-- 顶部栏 -->
+<div class="topbar">
+  <div class="title">安环巡检监控系统 <span>SAFETY INSPECTION MONITOR</span></div>
+  <div class="right">
+    <span class="datasource" id="dsLabel">● 演示数据</span>
+    <span class="pulse-dot"></span>
+    <span class="clock" id="clock">--:--:--</span>
+    <button class="btn-fs" onclick="toggleFS()">全屏</button>
+  </div>
+</div>
+
+<!-- 主内容 -->
+<div class="main">
+  <!-- KPI 卡片 -->
+  <div class="kpi-row">
+    <div class="kpi cyan">
+      <div class="label">今日告警总数</div>
+      <div class="val cyan" id="kpiTotal">--</div>
+      <div class="sub" id="kpiTotalSub">较昨日 --</div>
+    </div>
+    <div class="kpi p0">
+      <div class="label">P0 紧急告警</div>
+      <div class="val red" id="kpiP0">--</div>
+      <div class="sub" id="kpiP0Sub">需立即响应</div>
+    </div>
+    <div class="kpi p2">
+      <div class="label">整改完成率</div>
+      <div class="val green" id="kpiRate">--%</div>
+      <div class="sub" id="kpiRateSub">已整改 / 总告警</div>
+    </div>
+    <div class="kpi p1">
+      <div class="label">在线摄像头</div>
+      <div class="val orange" id="kpiCam">--</div>
+      <div class="sub" id="kpiCamSub">-- 路在线</div>
+    </div>
+  </div>
+
+  <!-- 图表行 -->
+  <div class="chart-row">
+    <div class="panel">
+      <div class="ptitle">24小时告警趋势</div>
+      <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="ptitle">隐患类型分布</div>
+      <div class="chart-wrap"><canvas id="typeChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- 底部行 -->
+  <div class="bottom-row">
+    <div class="panel">
+      <div class="ptitle">摄像头状态</div>
+      <div class="scroll-y">
+        <div class="cam-grid" id="camGrid"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ptitle">最近告警记录</div>
+      <div class="scroll-y">
+        <table class="alert-table">
+          <thead><tr><th>时间</th><th>优先级</th><th>隐患类型</th><th>监控点位</th><th>状态</th><th>来源</th></tr></thead>
+          <tbody id="alertTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// 配置
+// ============================================================
+const CONFIG = {
+  // 数据源：'mock' 使用演示数据，'api' 使用飞书多维表格 API
+  source: 'mock',
+  // 飞书 API 代理地址（需部署 Cloudflare Worker 代理，解决 CORS + token 刷新）
+  apiEndpoint: '/api/inspection',
+  // 自动刷新间隔（秒）
+  refreshInterval: 30,
+  // 多维表格信息
+  bitable: {
+    base_token: 'WNsFbGQEOaIANusrozfcY43Hn8b',
+    table_id: 'tblP5a7Lcx20IioF'
+  }
+};
+
+// ============================================================
+// 演示数据
+// ============================================================
+const MOCK_CAMERAS = [
+  { id:1, name:'仓库A区-主通道', status:'on', alerts:3 },
+  { id:2, name:'仓库B区-装卸平台', status:'on', alerts:1 },
+  { id:3, name:'仓库C区-消防通道', status:'on', alerts:2 },
+  { id:4, name:'仓库D区-叉车作业区', status:'on', alerts:4 },
+  { id:5, name:'库外-停车区', status:'on', alerts:0 },
+  { id:6, name:'仓库E区-货架区', status:'off', alerts:0 },
+  { id:7, name:'仓库F区-充电区', status:'on', alerts:1 },
+  { id:8, name:'办公区-走廊', status:'on', alerts:0 },
+];
+
+const HAZARD_TYPES = ['火焰/烟雾','消防通道堵塞','未戴安全帽','叉车区闯入','消防器材遮挡','人员跌倒','电气柜门未关','地面积水/油污','非授权区域闯入','货物堆高超标','叉车超速','设备异常'];
+
+const MOCK_ALERTS = [
+  { time:'15:42', priority:'P0', type:'火焰/烟雾', cam:'仓库A区-主通道', status:'整改中', source:'AI检测' },
+  { time:'15:38', priority:'P0', type:'未戴安全帽', cam:'仓库D区-叉车作业区', status:'待整改', source:'AI检测' },
+  { time:'15:31', priority:'P1', type:'消防器材遮挡', cam:'仓库B区-装卸平台', status:'待整改', source:'AI检测' },
+  { time:'15:15', priority:'P0', type:'叉车区闯入', cam:'仓库D区-叉车作业区', status:'整改中', source:'AI检测' },
+  { time:'14:58', priority:'P1', type:'电气柜门未关', cam:'仓库F区-充电区', status:'已整改', source:'人工上报' },
+  { time:'14:42', priority:'P0', type:'消防通道堵塞', cam:'仓库C区-消防通道', status:'已整改', source:'AI检测' },
+  { time:'14:20', priority:'P2', type:'地面积水/油污', cam:'仓库A区-主通道', status:'已整改', source:'AI检测' },
+  { time:'13:55', priority:'P1', type:'货物堆高超标', cam:'仓库E区-货架区', status:'已关闭', source:'AI检测' },
+  { time:'13:30', priority:'P2', type:'叉车超速', cam:'仓库D区-叉车作业区', status:'已整改', source:'AI检测' },
+  { time:'12:18', priority:'P0', type:'未戴安全帽', cam:'仓库A区-主通道', status:'已整改', source:'AI检测' },
+  { time:'11:50', priority:'P1', type:'消防器材遮挡', cam:'仓库C区-消防通道', status:'已整改', source:'人工上报' },
+  { time:'10:22', priority:'P0', type:'火焰/烟雾', cam:'仓库F区-充电区', status:'已关闭', source:'AI检测' },
+];
+
+// 24h 趋势模拟
+function genTrend(){
+  const labels=[],p0=[],p1=[],p2=[];
+  const now=new Date().getHours();
+  for(let i=23;i>=0;i--){
+    const h=(now-i+24)%24;
+    labels.push(String(h).padStart(2,'0')+':00');
+    p0.push(Math.round(Math.random()*2+(h>=8&&h<=18?1:0)));
+    p1.push(Math.round(Math.random()*3+(h>=8&&h<=18?2:0)));
+    p2.push(Math.round(Math.random()*2));
+  }
+  return {labels,p0,p1,p2};
+}
+
+// 类型分布模拟
+function genTypeDist(){
+  return {
+    labels:['火焰/烟雾','未戴安全帽','消防通道堵塞','叉车区闯入','消防器材遮挡','电气柜门未关','其他'],
+    values:[2,3,1,2,2,1,3]
+  };
+}
+
+// ============================================================
+// 渲染
+// ============================================================
+let trendChartInst=null, typeChartInst=null;
+
+function renderKPI(data){
+  const total=data.alerts.length;
+  const p0c=data.alerts.filter(a=>a.priority==='P0').length;
+  const done=data.alerts.filter(a=>a.status==='已整改'||a.status==='已关闭').length;
+  const rate=total?Math.round(done/total*100):0;
+  const camOn=data.cameras.filter(c=>c.status==='on').length;
+  const camTotal=data.cameras.length;
+
+  document.getElementById('kpiTotal').textContent=total;
+  document.getElementById('kpiTotalSub').textContent=`较昨日 ${total>8?'↑':'↓'} ${Math.abs(total-10)}`;
+  document.getElementById('kpiP0').textContent=p0c;
+  document.getElementById('kpiP0Sub').textContent=p0c>0?'⚠ 需立即响应':'✓ 无紧急告警';
+  document.getElementById('kpiRate').textContent=rate+'%';
+  document.getElementById('kpiRateSub').textContent=`${done} 已整改 / ${total} 总告警`;
+  document.getElementById('kpiCam').textContent=camOn+'/'+camTotal;
+  document.getElementById('kpiCamSub').textContent=camOn===camTotal?'全部在线':(camTotal-camOn)+' 路离线';
+}
+
+function renderCameras(cameras){
+  const grid=document.getElementById('camGrid');
+  grid.innerHTML=cameras.map(c=>`
+    <div class="cam-card">
+      <div class="cam-name">CH${c.id} ${c.name}</div>
+      <div class="cam-info">
+        <span class="cam-status"><span class="dot ${c.status}"></span>${c.status==='on'?'在线':'离线'}</span>
+        <span style="color:${c.alerts>0?'var(--p1)':'var(--muted)'}">告警 ${c.alerts}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderAlerts(alerts){
+  const tbody=document.getElementById('alertTbody');
+  tbody.innerHTML=alerts.map(a=>{
+    const bc=a.priority==='P0'?'p0':a.priority==='P1'?'p1':'p2';
+    const sc=a.status==='已整改'||a.status==='已关闭'?'done':a.status==='整改中'?'progress':'pending';
+    return `<tr>
+      <td>${a.time}</td>
+      <td><span class="badge ${bc}">${a.priority}</span></td>
+      <td>${a.type}</td>
+      <td>${a.cam}</td>
+      <td><span class="badge ${sc}">${a.status}</span></td>
+      <td>${a.source}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderTrend(trend){
+  const ctx=document.getElementById('trendChart').getContext('2d');
+  if(trendChartInst) trendChartInst.destroy();
+  trendChartInst=new Chart(ctx,{
+    type:'line',
+    data:{
+      labels:trend.labels,
+      datasets:[
+        {label:'P0 紧急',data:trend.p0,borderColor:'#ff4757',backgroundColor:'rgba(255,71,87,.1)',fill:true,tension:.3,pointRadius:1,borderWidth:2},
+        {label:'P1 重要',data:trend.p1,borderColor:'#ffa502',backgroundColor:'rgba(255,165,2,.08)',fill:true,tension:.3,pointRadius:1,borderWidth:2},
+        {label:'P2 一般',data:trend.p2,borderColor:'#2ed573',backgroundColor:'rgba(46,213,115,.06)',fill:true,tension:.3,pointRadius:1,borderWidth:2},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{color:'#5a6b99',font:{size:11},boxWidth:12,padding:12}}},
+      scales:{
+        x:{grid:{color:'rgba(26,36,86,.5)'},ticks:{color:'#5a6b99',font:{size:10},maxRotation:0,autoSkip:true,maxTicksLimit:12}},
+        y:{beginAtZero:true,grid:{color:'rgba(26,36,86,.5)'},ticks:{color:'#5a6b99',font:{size:10},stepSize:1}}
+      },
+      interaction:{mode:'index',intersect:false},
+    }
+  });
+}
+
+function renderTypeDist(dist){
+  const ctx=document.getElementById('typeChart').getContext('2d');
+  if(typeChartInst) typeChartInst.destroy();
+  const colors=['#ff4757','#ff6348','#ffa502','#ffda79','#2ed573','#7bed9f','#5a6b99'];
+  typeChartInst=new Chart(ctx,{
+    type:'doughnut',
+    data:{
+      labels:dist.labels,
+      datasets:[{data:dist.values,backgroundColor:colors,borderColor:'#0d1333',borderWidth:2,hoverOffset:6}]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      cutout:'55%',
+      plugins:{
+        legend:{position:'right',labels:{color:'#5a6b99',font:{size:11},boxWidth:12,padding:8}},
+      }
+    }
+  });
+}
+
+// ============================================================
+// 数据加载
+// ============================================================
+async function loadData(){
+  if(CONFIG.source==='api'){
+    try{
+      const r=await fetch(CONFIG.apiEndpoint);
+      if(r.ok){
+        const d=await r.json();
+        document.getElementById('dsLabel').textContent='● 实时数据';
+        document.getElementById('dsLabel').className='datasource live';
+        return d;
+      }
+    }catch(e){console.warn('API 不可用，回退演示数据',e)}
+  }
+  // 演示数据
+  return {
+    cameras:MOCK_CAMERAS,
+    alerts:MOCK_ALERTS,
+    trend:genTrend(),
+    typeDist:genTypeDist()
+  };
+}
+
+async function refresh(){
+  const data=await loadData();
+  renderKPI(data);
+  renderCameras(data.cameras);
+  renderAlerts(data.alerts);
+  renderTrend(data.trend);
+  renderTypeDist(data.typeDist);
+}
+
+// ============================================================
+// 时钟 & 全屏
+// ============================================================
+function updateClock(){
+  const n=new Date();
+  document.getElementById('clock').textContent=
+    String(n.getHours()).padStart(2,'0')+':'+
+    String(n.getMinutes()).padStart(2,'0')+':'+
+    String(n.getSeconds()).padStart(2,'0');
+}
+function toggleFS(){
+  if(!document.fullscreenElement) document.documentElement.requestFullscreen();
+  else document.exitFullscreen();
+}
+
+// ============================================================
+// 启动
+// ============================================================
+updateClock(); setInterval(updateClock,1000);
+refresh();
+setInterval(refresh,CONFIG.refreshInterval*1000);
+</script>
+</body>
+</html>
