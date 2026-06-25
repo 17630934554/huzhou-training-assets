@@ -1,0 +1,241 @@
+# ============================================================
+# 安环巡检 AI 检测系统 - 配置文件（服务器版·有外网）
+# ============================================================
+# 部署环境：服务器主机（双网：内网取流 + 外网出站飞书）
+# 不需要 4G Dongle，服务器自带外网出口
+# ============================================================
+
+# 网络配置
+network:
+  # 服务器同时能访问内网NVR和外网飞书API
+  # 如果只有单网卡，需确保路由能同时到达两个网段
+  # 如果双网卡，内网网卡接交换机，外网网卡接外网出口
+  nvr_accessible: true          # 内网可达NVR
+  feishu_accessible: true       # 外网可达飞书API
+  # 如果需要指定网卡路由，取消注释并填入实际网卡名：
+  # nvr_interface: "eth0"       # 内网网卡
+  # feishu_interface: "eth1"    # 外网网卡
+
+# 海康 NVR RTSP 取流配置
+nvr:
+  host: "192.168.1.64"          # ⚠️ 部署时替换为 NVR 实际内网 IP
+  port: 554
+  username: "admin"             # ⚠️ 部署时替换
+  password: "admin123"          # ⚠️ 部署时替换
+  # ============================================================
+  # 摄像头通道配置 - 分层覆盖（A/B/C 三层）
+  # A层：重点区域，实时AI推理（2fps持续）
+  # B层：一般区域，轮询AI推理（每2分钟轮换一批）
+  # C层：仅录像备查，不做AI推理
+  # ============================================================
+  channels:
+    # ---- A层：重点实时监控 ----
+    - id: 1
+      name: "仓库A区-主通道"
+      tier: A                   # 实时推理
+      rtsp_url: "rtsp://{username}:{password}@{host}:{port}/Streaming/Channels/101"
+    - id: 2
+      name: "仓库B区-装卸平台"
+      tier: A
+      rtsp_url: "rtsp://{username}:{password}@{host}:{port}/Streaming/Channels/201"
+    - id: 3
+      name: "仓库C区-消防通道"
+      tier: A
+      rtsp_url: "rtsp://{username}:{password}@{host}:{port}/Streaming/Channels/301"
+    - id: 4
+      name: "仓库D区-叉车作业区"
+      tier: A
+      rtsp_url: "rtsp://{username}:{password}@{host}:{port}/Streaming/Channels/401"
+
+    # ---- B层：轮询巡检（按需添加） ----
+    # - id: 5
+    #   name: "仓库E区-货架区"
+    #   tier: B
+    #   rtsp_url: "rtsp://{username}:{password}@{host}:{port}/Streaming/Channels/501"
+    # - id: 6
+    #   name: "仓库F区-充电区"
+    #   tier: B
+    #   rtsp_url: "rtsp://{username}:{password}@{host}:{port}/Streaming/Channels/601"
+
+    # ---- C层：仅录像（按需添加） ----
+    # - id: 7
+    #   name: "仓库G区-办公区"
+    #   tier: C
+    #   rtsp_url: "rtsp://{username}:{password}@{host}:{port}/Streaming/Channels/701"
+
+    # ⚠️ 300路摄像头全写进来没问题
+    # tier: A 的路数取决于显卡算力，RTX 3060 推荐 ≤32路
+    # tier: B 可以扩展到 100路（轮询）
+    # tier: C 不占算力，写多少都行
+
+  # 轮询配置（B层专用）
+  polling:
+    enabled: true
+    batch_size: 20              # 每批轮询路数
+    interval_sec: 120           # 每批推理时长（秒）
+    switch_gap: 5               # 切换间隔（秒）
+
+# YOLO 检测模型配置
+model:
+  # YOLOv8n 轻量模型，RTX 3060 可轻松承载
+  path: "yolov8n.pt"            # 通用目标检测（人、车等）
+
+  # 安环专用模型（后续训练后替换路径）
+  helmet_model: "models/helmet_detect.pt"
+  fire_smoke_model: "models/fire_smoke_detect.pt"
+
+  # 推理设备: cuda（服务器有NVIDIA显卡）/ cpu
+  device: "cuda"
+
+  # 推理置信度阈值
+  confidence: 0.55
+
+  # 推理帧率（每秒处理几帧，降低算力消耗）
+  inference_fps: 2
+
+  # GPU 显存限制（MB），0 = 不限制，自动管理
+  gpu_memory_limit: 0
+
+# 检测场景配置
+scenes:
+  fire_smoke:
+    enabled: true
+    model: "fire_smoke_model"
+    classes: ["fire", "smoke"]
+    cooldown: 60
+    min_confidence: 0.5
+    description: "火焰/烟雾检测"
+
+  no_helmet:
+    enabled: true
+    model: "helmet_model"
+    classes: ["no_helmet"]
+    cooldown: 120
+    min_confidence: 0.55
+    description: "未戴安全帽检测"
+
+  fire_exit_block:
+    enabled: true
+    model: "path"
+    classes: ["person"]
+    zone: "fire_exit_zone"
+    min_duration: 30
+    cooldown: 300
+    min_confidence: 0.5
+    description: "消防通道堵塞检测"
+
+  forklift_intrude:
+    enabled: true
+    model: "path"
+    classes: ["person"]
+    zone: "forklift_zone"
+    cooldown: 60
+    min_confidence: 0.5
+    description: "叉车作业区人员闯入检测"
+
+  fire_ext_missing:
+    enabled: false
+    model: "path"
+    classes: []
+    cooldown: 600
+    min_confidence: 0.5
+    description: "消防器材遮挡/缺失检测"
+
+  person_fall:
+    enabled: false
+    model: "path"
+    classes: ["person"]
+    cooldown: 120
+    min_confidence: 0.5
+    description: "人员跌倒检测"
+
+  cabinet_open:
+    enabled: false
+    model: "path"
+    classes: []
+    cooldown: 600
+    min_confidence: 0.5
+    description: "电气柜门未关检测"
+
+  floor_liquid:
+    enabled: false
+    model: "path"
+    classes: []
+    cooldown: 600
+    min_confidence: 0.5
+    description: "地面积水/油污检测"
+
+  unauth_area:
+    enabled: false
+    model: "path"
+    classes: ["person"]
+    cooldown: 300
+    min_confidence: 0.5
+    description: "非授权区域闯入检测"
+
+  stack_overheight:
+    enabled: false
+    model: "path"
+    classes: []
+    cooldown: 600
+    min_confidence: 0.5
+    description: "货物堆高超标检测"
+
+  forklift_speed:
+    enabled: false
+    model: "path"
+    classes: []
+    cooldown: 300
+    min_confidence: 0.5
+    description: "叉车超速检测"
+
+  equip_leak:
+    enabled: false
+    model: "path"
+    classes: []
+    cooldown: 600
+    min_confidence: 0.5
+    description: "设备异常(跑冒滴漏)检测"
+
+# 飞书告警推送配置
+feishu:
+  # 群机器人 Webhook（已验证可用）
+  webhook_url: "https://open.feishu.cn/open-apis/bot/v2/hook/fe6f6996-0036-431b-b687-d57b4021e1a8"
+
+  # 多维表格（安环巡检记录）
+  bitable:
+    base_token: "WNsFbGQEOaIANusrozfcY43Hn8b"
+    table_id: "tblP5a7Lcx20IioF"
+
+  # 飞书应用凭证（用于写入多维表格，需要 tenant_access_token）
+  # ⚠️ 需在飞书开放平台创建应用获取，参考 README.md 第7步
+  app_id: ""                    # ⚠️ 部署时填写
+  app_secret: ""                # ⚠️ 部署时填写
+
+  # 推送策略
+  push_policy:
+    P0: "webhook_and_bitable"   # 推群 + 写表格
+    P1: "webhook_and_bitable"   # 推群 + 写表格
+    P2: "bitable_only"          # 仅写表格，不推群
+
+  # 整改截止自动计算（小时）
+  rectify_deadline_hours:
+    P0: 2
+    P1: 24
+    P2: 72
+
+# 截图/视频保存
+storage:
+  screenshot_dir: "/data/alerts/screenshots"
+  video_dir: "/data/alerts/videos"
+  clip_duration: 5
+  retention_days: 30
+
+# 日志
+logging:
+  level: "INFO"
+  file: "/data/logs/detector.log"
+  # 日志保留天数
+  retention_days: 30
+  # 单个日志文件最大 MB
+  max_size_mb: 50
