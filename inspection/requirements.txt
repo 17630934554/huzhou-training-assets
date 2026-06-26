@@ -1,0 +1,19 @@
+# 安环巡检 AI 检测系统 - 依赖
+# 部署到边缘盒子时: pip install -r requirements.txt
+
+# YOLO 推理
+ultralytics>=8.1.0
+
+# OpenCV 取流
+opencv-python>=4.8.0
+
+# HTTP 请求（飞书 API）
+requests>=2.28.0
+
+# YAML 配置
+PyYAML>=6.0
+
+# NVIDIA GPU 加速（Jetson / RTX 3060）
+# 注意: Jetson 需用 jetson-inference 替代，这里列出标准 CUDA 版本
+# torch 和 torchvision 需匹配 CUDA 版本，建议:
+# pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
