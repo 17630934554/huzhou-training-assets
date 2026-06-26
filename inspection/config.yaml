@@ -15,7 +15,29 @@ nvr:
     - id: 1
       name: "A-qu-zhu-tong-dao"
       tier: A
-      rtsp_url: "rtsp://{username}:{password}@{host}:{port}/Streaming/Channels/102"
+      rtsp_url: "rtsp://{username}:{password}@{host}:{port}/Streaming/Channels/101"
+
+    # Add more cameras below:
+    # - id: 2
+    #   name: "B-qu-zhuang-zai-ping-tai"
+    #   tier: A
+    #   rtsp_url: "rtsp://{username}:{password}@{host}:{port}/Streaming/Channels/201"
+    # - id: 3
+    #   name: "C-qu-xiao-fang-tong-dao"
+    #   tier: A
+    #   rtsp_url: "rtsp://{username}:{password}@{host}:{port}/Streaming/Channels/301"
+
+    # B-tier (polling):
+    # - id: 10
+    #   name: "E-qu-huo-jia-qu"
+    #   tier: B
+    #   rtsp_url: "rtsp://{username}:{password}@{host}:{port}/Streaming/Channels/1001"
+
+    # C-tier (record only):
+    # - id: 50
+    #   name: "G-qu-ban-gong-qu"
+    #   tier: C
+    #   rtsp_url: "rtsp://{username}:{password}@{host}:{port}/Streaming/Channels/5001"
 
   polling:
     enabled: true
