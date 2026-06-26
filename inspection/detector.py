@@ -52,7 +52,6 @@ except ImportError:
 
 def find_ffmpeg():
     """Find FFmpeg binary: try imageio-ffmpeg first, then system PATH"""
-    # Try imageio-ffmpeg (pip package with full HEVC support)
     try:
         import imageio_ffmpeg
         exe = imageio_ffmpeg.get_ffmpeg_exe()
@@ -61,7 +60,6 @@ def find_ffmpeg():
     except ImportError:
         pass
 
-    # Try system PATH
     import shutil
     exe = shutil.which("ffmpeg")
     if exe:
@@ -78,15 +76,20 @@ FFMPEG_EXE = find_ffmpeg()
 # ============================================================
 
 class FFmpegRTSPReader:
-    """Read RTSP stream via FFmpeg subprocess - supports all codecs including H.265"""
+    """Read RTSP stream via FFmpeg subprocess - supports all codecs including H.265
 
-    def __init__(self, rtsp_url, logger=None, resize_width=640):
+    Uses fixed output resolution (640x360) for reliable frame reading.
+    No need to probe stream resolution or guess frame size.
+    """
+
+    OUT_WIDTH = 640
+    OUT_HEIGHT = 360
+    FRAME_SIZE = OUT_WIDTH * OUT_HEIGHT * 3  # 691200 bytes (BGR24)
+
+    def __init__(self, rtsp_url, logger=None):
         self.rtsp_url = rtsp_url
         self.logger = logger
-        self.resize_width = resize_width
         self.process = None
-        self.width = 0
-        self.height = 0
 
     def open(self):
         """Start FFmpeg subprocess to decode RTSP stream"""
@@ -98,12 +101,12 @@ class FFmpegRTSPReader:
         cmd = [
             FFMPEG_EXE,
             "-rtsp_transport", "tcp",
-            "-stimeout", "5000000",       # 5s timeout
+            "-stimeout", "5000000",       # 5s RTSP timeout
             "-i", self.rtsp_url,
             "-f", "rawvideo",
             "-pix_fmt", "bgr24",
             "-an", "-sn",
-            "-vf", f"scale={self.resize_width}:-2",
+            "-s", f"{self.OUT_WIDTH}x{self.OUT_HEIGHT}",  # Force fixed output size
             "-"
         ]
 
@@ -114,10 +117,8 @@ class FFmpegRTSPReader:
                 stderr=subprocess.DEVNULL,
                 bufsize=10 * 1024 * 1024,
             )
-            # Read one frame to get dimensions
-            # We'll determine frame size from the first read
-            self.width = self.resize_width
-            self.height = 0  # Will be set on first read
+            if self.logger:
+                self.logger.info(f"[FFmpeg] Subprocess started, waiting for first frame...")
             return True
         except Exception as e:
             if self.logger:
@@ -129,38 +130,13 @@ class FFmpegRTSPReader:
         if not self.process or self.process.poll() is not None:
             return False, None
 
-        # First read - need to determine height
-        if self.height == 0:
-            # Read a chunk to figure out frame size
-            # Try common heights
-            for h in [360, 480, 720, 1080, 576, 512, 384, 640]:
-                raw = self.process.stdout.read(self.width * h * 3)
-                if len(raw) == self.width * h * 3:
-                    self.height = h
-                    frame = np.frombuffer(raw, dtype=np.uint8).reshape((h, self.width, 3))
-                    return True, frame
-                elif len(raw) > 0:
-                    # Put back what we read - try a different approach
-                    # Read more data to find the right height
-                    continue
-                else:
-                    return False, None
-            # If we couldn't determine height, try reading a lot
-            raw = self.process.stdout.read(self.width * 1080 * 3)
-            if len(raw) > 0:
-                # Figure out height from data length
-                h = len(raw) // (self.width * 3)
-                if h > 0:
-                    self.height = h
-                    frame = np.frombuffer(raw[:self.width * h * 3], dtype=np.uint8).reshape((h, self.width, 3))
-                    return True, frame
+        raw = self.process.stdout.read(self.FRAME_SIZE)
+        if len(raw) != self.FRAME_SIZE:
             return False, None
 
-        frame_size = self.width * self.height * 3
-        raw = self.process.stdout.read(frame_size)
-        if len(raw) != frame_size:
-            return False, None
-        frame = np.frombuffer(raw, dtype=np.uint8).reshape((self.height, self.width, 3))
+        frame = np.frombuffer(raw, dtype=np.uint8).reshape(
+            (self.OUT_HEIGHT, self.OUT_WIDTH, 3)
+        )
         return True, frame
 
     def release(self):
@@ -336,6 +312,7 @@ class CameraDetector(Thread):
 
                 interval = 1.0 / self.inference_fps
                 last_infer = 0
+                first_frame = True
 
                 while self.running:
                     if isinstance(reader, FFmpegRTSPReader):
@@ -346,6 +323,10 @@ class CameraDetector(Thread):
                     if not ret or frame is None:
                         self.logger.warning(f"[Stream] {self.camera_name} lost, reconnecting...")
                         break
+
+                    if first_frame:
+                        self.logger.info(f"[Connect] {self.camera_name} first frame OK, shape={frame.shape}")
+                        first_frame = False
 
                     now = time.time()
                     if now - last_infer < interval:
